@@ -1,6 +1,6 @@
 import discord
 
-from DedenneBot import DedenneBot
+from Bot.DedenneBot import DedenneBot
 from util import parse_json
 
 

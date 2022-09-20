@@ -14,7 +14,7 @@ class YoutubeHandler:
             maxResults=10
         ).execute()
 
-        return search_response
+        return self.__get_video_info(search_response)
 
 
 
@@ -28,7 +28,7 @@ class YoutubeHandler:
                 result.append({
                     "id": item["id"]["videoId"],
                     "title": item["snippet"]["title"],
-                    "url": item["thumbnails"]["default"]["url"]
+                    "url": item["snippet"]["thumbnails"]["high"]["url"]
                 })
 
         return result

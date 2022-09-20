@@ -5,10 +5,6 @@ import discord
 from youtube.youtube import YoutubeHandler
 from util import *
 
-class State(Enum):
-
-
-
 class DedenneBot(discord.Client):
 
     async def on_ready(self):
@@ -52,11 +48,25 @@ class DedenneBot(discord.Client):
                     search_result = self.youtube_handler.get_search_result(keyword)
                     await message.channel.send(self.__get_search_result_string(search_result))
 
-                    self.__addTask(
+                    self.__add_task(
                         channel_id=message.channel.id,
                         user_id=message.author.id,
                         search_result=search_result
                     )
+
+                elif content == "!select":
+                    search_result = self.__get_task(
+                        channel_id=message.channel.id,
+                        user_id=message.author.id
+                    )
+
+                    if search_result is not None:
+                        num = int(message.content.split()[1])
+
+                        if 0 < num <= len(search_result):
+                            target = search_result[num-1]
+
+                            await message.channel.send(target["url"])
 
                 else:
                     await message.channel.send("%s 기능 미구현" % content)
@@ -64,21 +74,30 @@ class DedenneBot(discord.Client):
         else:
             await message.channel.send(message.content)
 
-    def __addTask(self, channel_id, user_id, search_result):
-        key = channel_id+"``"+user_id
+    def __add_task(self, channel_id, user_id, search_result):
+        key = str(channel_id)+"``"+str(user_id)
 
         self.task[key] = search_result
 
+    def __get_task(self, channel_id, user_id):
+        key = str(channel_id)+"``"+str(user_id)
+
+        if key in self.task.keys():
+            return self.task.pop(key)
+        else:
+            return None
+
+
     def __get_search_result_string(self, search_result):
-        msg = "**원하는 번호 고르기>**\n"
+        msg = "[검색결과]\n"
 
         for i in range(len(search_result)):
             item = search_result[i]
 
             # url = "https://www.youtube.com/watch?v=" + item["id"]
-            msg += str(i + 1) + ". " + item["title"] + "\n"
+            msg += "  " + str(i + 1) + ". " + item["title"] + "\n"
 
-        msg += "*재생 n, play n, !재생 n, !play n 등으로 입력*"
+        msg += "**선택 n으로 입력>>**"
         return msg
 
     def __get_return_words(self, message):
