@@ -10,11 +10,11 @@ def parse_token(url="info.json"):
         return json_contents["discord"]["token"]
 
 
-def parse_words(url="words.json"):
+def parse_words(url="command_collection.json"):
     with open(url, "r", encoding="UTF-8") as json_txt:
         json_contents = json.load(json_txt)
 
-        return json_contents["words"]
+        return json_contents
 
 
 class DedenneBot(discord.Client):
@@ -32,31 +32,43 @@ class DedenneBot(discord.Client):
         if message.author == self.user:
             return
 
-        result = self.get_return_words(message.content)
+        return_words = self.get_return_words(message.content)
 
-        if result is not None:
-            commands = result.split("_")
+        if return_words is not None:
+            words = return_words.split("_")
 
-            command = commands[0]
-            content = commands[1]
+            command = words[0]
+            content = words[1]
 
             # 단순 출력 커맨드
             if command == "m":
                 await message.channel.send(content + " " + message.author.name)
 
+            # 명령어
             elif command == "c":
-                # command 처리
-                print(content)
+                command_contents = self.get_command_contents(content)
+
+                if content == "help":
+                    await message.channel.send(command_contents["text"])
+
+                else:
+                    await message.channel.send("%s 기능 미구현" % content)
 
         else:
             await message.channel.send(message.content)
 
     def get_return_words(self, message):
-        if self.words is not None:
-            for return_word, words in self.words.items():
-                for word in words:
-                    if word in message:
-                        return return_word
+        for item in self.words["words"]:
+            for word in item["trigger_words"]:
+                if word in message:
+                    return item["return_word"]
+
+        return None
+
+    def get_command_contents(self, command):
+        for item in self.words["commands"]:
+            if item["command"] == command:
+                return item
 
         return None
 
