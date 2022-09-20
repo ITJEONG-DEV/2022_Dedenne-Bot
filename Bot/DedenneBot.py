@@ -42,6 +42,9 @@ class DedenneBot(discord.Client):
                 if content == "!help":
                     await message.channel.send(command_contents["text"])
 
+                elif content == "!introduce":
+                    await message.channel.send(command_contents["text"])
+
                 elif content == "!search":
                     keyword = " ".join(message.content.split()[1:])
 
