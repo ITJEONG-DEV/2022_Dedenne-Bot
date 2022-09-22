@@ -11,6 +11,7 @@ class DedenneBot(discord.Client):
     async def on_ready(self):
         # word data
         self.__words = parse_json("json/command_collection.json")
+        self.__error_messages = parse_json("json/error_messages.json")
 
         # bot worker
         self.__worker = BotWorker(self)
@@ -55,6 +56,20 @@ class DedenneBot(discord.Client):
                 )
 
                 await self.__worker.handle(item)
+
+    async def send_specify_message(self, channel, error_name: str, name: str = ""):
+        words = self.__error_messages[error_name]
+
+        message = ""
+        for word in words:
+            if word.startswith('!'):
+                message += name
+            else:
+                message += word
+
+            message += " "
+
+        await self.send_message(channel, message)
 
     async def send_message(self, channel, contents):
         await channel.send(contents)

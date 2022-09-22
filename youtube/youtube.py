@@ -96,7 +96,7 @@ class YoutubeHandler:
 
                 return video
         except Exception as e:
-            video = Video()
+            video = Video("", "", "")
             video.error = e
             return video
 

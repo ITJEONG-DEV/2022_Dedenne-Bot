@@ -72,10 +72,7 @@ class BotWorker:
         user = item.contents["author"]
 
         if not user.voice:
-            await self.bot.send_message(
-                channel=channel,
-                contents="{}님, 먼저 음성 채널에 참여해 주세요.".format(user.name)
-            )
+            await self.bot.send_specify_message(channel, "join_error", user.name)
             return
 
         self.voice_channel = user.voice.channel
@@ -90,10 +87,7 @@ class BotWorker:
         channel = item.contents["channel"]
 
         if self.voice_channel is None:
-            await self.bot.send_message(
-                channel=channel,
-                contents="{}은 음성 채널에 참여하고 있지 않아요".format(DedenneBot.user.name)
-            )
+            await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
             return
 
         if self.voice_client.is_connected():
@@ -104,13 +98,10 @@ class BotWorker:
 
             self.playing_state = PlayingState.NONE
         else:
-            await self.bot.send_message(
-                channel=channel,
-                contents="{}은 음성 채널에 참여하고 있지 않아요".format(self.bot.user.name)
-            )
+            await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
 
     def __get_search_result_string(self, search_result):
-        msg = "[검색결과]\n"
+        msg = "🔎*검색결과*🔎\n"
 
         for i in range(len(search_result)):
             item = search_result[i]
@@ -121,6 +112,7 @@ class BotWorker:
         return msg
 
     async def __search(self, item: Work):
+        guild_id = item.contents["guild"].id
         channel = item.contents["channel"]
         user_id = item.contents["author"].id
         keyword = " ".join(item.contents["message"].split()[1:])
@@ -133,6 +125,7 @@ class BotWorker:
         )
 
         task = Task(
+            guild_id=guild_id,
             channel_id=channel.id,
             user_id=user_id,
             search_result=search_result
@@ -176,10 +169,7 @@ class BotWorker:
         video = self.youtube_handler.get_video_info(url)
 
         if video.error is not None:
-            await self.bot.send_message(
-                channel=channel,
-                contents="잘못된 링크에요"
-            )
+            await self.bot.send_specify_message(channel, "invalid_link_error")
             return
 
         contents = item.contents
@@ -195,7 +185,7 @@ class BotWorker:
     async def __queue(self, item: Work):
         channel = item.contents["channel"]
 
-        msg = "[현재 재생목록]\n"
+        msg = "🎵*현재 재생목록*🎵\n"
         for i in range(self.music_queue.length()):
             item = self.music_queue.get(i)
 
@@ -240,7 +230,7 @@ class BotWorker:
         video = self.music_queue.dequeue()
 
         if video is None:
-            await self.bot.send_message(self.channel, "재생할 노래가 없어요")
+            await self.bot.send_specify_message(self.channel, "empty_queue_error")
             return
 
         try:
@@ -254,59 +244,68 @@ class BotWorker:
 
             self.playing_state = PlayingState.PLAYING
 
-            await self.bot.send_message(self.channel, '**현재 재생 중인 영상: {}**'.format(player.title))
-            await self.bot.send_message(self.channel, '{}'.format(video.thumbnail))
+            await self.bot.send_specify_message(self.channel, "play_message", player.title)
+            # await self.bot.send_message(self.channel, '{}'.format(video.thumbnail))
 
         except Exception as e:
             print("Error when try playing: " + str(e))
-            await self.bot.send_message(self.channel, "재생 시도 중 오류 발생! {}".format(e))
+            await self.bot.send_specify_message(self.channel, "playing_error", str(e))
             self.playing_state = PlayingState.READY
 
     async def __pause(self, item: Work):
         channel = item.contents["channel"]
 
         if self.voice_channel is None or self.voice_client is None:
-            await self.bot.send_message(channel, "{}은 음성 채널에 참여하고 있지 않아요".format(self.bot.user.name))
+            await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
             return
 
         if self.voice_client.is_playing():
             await self.voice_client.pause()
             self.playing_state = PlayingState.PAUSE
+
+            await self.bot.send_specify_message(channel, "pause_message")
+
         else:
-            await self.bot.send_message(channel, "{}이 현재 재생 중인 노래가 없어요".format(self.bot.user.name))
+            await self.bot.send_specify_message(channel, "not_playing_error", self.bot.user.name)
 
     async def __stop(self, item: Work):
         channel = item.contents["channel"]
 
         if self.voice_channel is None or self.voice_client is None:
-            await self.bot.send_message(channel, "{}은 음성 채널에 참여하고 있지 않아요".format(self.bot.user.name))
-            return
-
-        if self.voice_client.is_playing():
-            await self.voice_client.stop()
-            self.playing_state = PlayingState.STOP
-        else:
-            await self.bot.send_message(channel, "{}이 이전에 재생 중이던 노래가 없어요".format(self.bot.user.name))
-
-    async def __skip(self, item: Work):
-        channel = item.contents["channel"]
-
-        if self.voice_channel is None or self.voice_client is None:
-            await self.bot.send_message(channel, "{}은 음성 채널에 참여하고 있지 않아요".format(self.bot.user.name))
+            await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
             return
 
         if self.voice_client.is_playing():
             self.voice_client.stop()
 
-            await self.bot.send_message(channel, "노래를 스킵합니다".format(self.bot.user.name))
+            self.playing_state = PlayingState.STOP
 
+            await self.bot.send_specify_message(channel, "stop_message")
+
+        else:
+            await self.bot.send_specify_message(channel, "isnt_playing_error", self.bot.user.name)
+
+    async def __skip(self, item: Work):
+        channel = item.contents["channel"]
+        guild = item.contents["guild"]
+
+        if self.voice_channel is None or self.voice_client is None:
+            await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
+            return
+
+        if self.voice_client.is_playing():
+            self.voice_client.stop()
+
+            await self.bot.send_specify_message(channel, "skip_message")
+
+            print(self.music_queue.length())
             if self.music_queue.length() == 0:
                 self.playing_state = PlayingState.STOP
             else:
                 await self.__play()
 
         else:
-            await self.bot.send_message(channel, "{}이 이전에 재생 중이던 노래가 없어요".format(self.bot.user.name))
+            await self.bot.send_specify_message(channel, "isnt_playing_error", self.bot.user.name)
             return
 
 
@@ -317,6 +316,6 @@ class BotWorker:
 
         self.music_queue.enqueue(video)
 
-        await self.bot.send_message(channel, "'{}'가 재생목록에 추가되었어요".format(video.title))
+        await self.bot.send_specify_message(channel, "add_queue_message", video.title)
 
         await self.__try_play(item)
