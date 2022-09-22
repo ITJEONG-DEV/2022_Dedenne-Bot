@@ -76,7 +76,7 @@ class BotWorker:
 
         if not user.voice:
             await self.bot.send_specify_message(channel, "join_error", user.name)
-            return
+            return False
 
         self.voice_channel = user.voice.channel
 
@@ -91,6 +91,9 @@ class BotWorker:
 
         except Exception as e:
             print("Error when joining voice channel: " + e)
+            return False
+
+        return True
 
     async def __leave(self, item: Work):
         guild = item.contents["guild"]
@@ -120,7 +123,7 @@ class BotWorker:
             await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
 
     def __get_search_result_string(self, search_result):
-        msg = "🔎*검색결과*🔎\n"
+        msg = "*🔎검색결과🔎*\n"
 
         for i in range(len(search_result)):
             item = search_result[i]
@@ -204,7 +207,7 @@ class BotWorker:
     async def __queue(self, item: Work):
         channel = item.contents["channel"]
 
-        msg = "🎵*현재 재생목록*🎵\n"
+        msg = "*🎵현재 재생목록🎵*\n"
         for i in range(self.music_queue.length()):
             item = self.music_queue.get(i)
 
@@ -231,7 +234,10 @@ class BotWorker:
 
     async def __try_play(self, item: Work):
         if self.voice_channel is None:
-            await self.__join(item)
+            result = await self.__join(item)
+
+            if not result:
+                return
 
         self.guild = item.contents["guild"]
         self.channel = item.contents["channel"]
