@@ -4,7 +4,7 @@ from oauth2client.tools import argparser
 
 from util import parse_json
 
-API_KEY = parse_json("../data/info.json")["youtube"]["api_key"]
+API_KEY = parse_json("../json/info.json")["youtube"]["api_key"]
 
 
 def build_youtube_search():

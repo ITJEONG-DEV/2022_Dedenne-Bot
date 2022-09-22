@@ -1,0 +1,1 @@
+from .DedenneBotv2 import DedenneBot

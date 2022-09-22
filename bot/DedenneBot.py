@@ -1,9 +1,7 @@
+import asyncio
 from enum import Enum
-import threading
-import time
 
 import discord
-from discord.ext.commands import bot
 
 from youtube.youtube import YoutubeHandler, YTDLSource
 from util import *
@@ -14,8 +12,8 @@ class State(Enum):
     READY = 1,
     PLAYING = 2,
     PAUSE = 3,
-    STOP = 4
-
+    STOP = 4,
+    LEAVE = 5
 
 class DedenneBot(discord.Client):
 
@@ -23,11 +21,9 @@ class DedenneBot(discord.Client):
         self.state = state
 
     async def on_ready(self):
-        self.__words = parse_json("data/command_collection.json")
+        self.__words = parse_json("json/command_collection.json")
 
-        self.youtube_handler = YoutubeHandler(parse_json("data/info.json")["youtube"]["api_key"])
-
-        self.current_thread = None
+        self.youtube_handler = YoutubeHandler(parse_json("json/info.json")["youtube"]["api_key"])
 
         self.task = {}
         self.__queue = []
@@ -37,8 +33,9 @@ class DedenneBot(discord.Client):
 
         self.state = State.DEFAULT
 
+        self.playing_start = False
+
         print('Logged on as', self.user)
-        self.set_state(State.READY)
 
     async def on_message(self, message):
         if self.state == State.DEFAULT:
@@ -66,24 +63,32 @@ class DedenneBot(discord.Client):
 
             # 명령어
             elif command == "c":
-                command_contents = self.__get_command_contents(content)
+                if content == "help":
+                    await DedenneBot.send_message(message.channel, "")
 
-                if content == "!help":
-                    await DedenneBot.send_message(message.channel, command_contents["text"])
+                elif content == "introduce":
+                    await DedenneBot.send_message(message.channel, "")
 
-                elif content == "!introduce":
-                    await DedenneBot.send_message(message.channel, command_contents["text"])
+                elif content == "join":
+                    await self.join(message.channel, message.user)
 
-                elif content == "!search":
+                elif content == "leave":
+                    await self.leave(message.channel)
+
+                elif content == "search":
                     keyword = " ".join(message.content.split()[1:])
-                    await self.search(message.channel, message.author.id, keyword)
+                    await self.search(message.channel, message.author.__id, keyword)
 
-                elif content == "!select":
+                elif content == "select":
                     await self.select(message.guild, message.channel, message.author, message.content)
 
-                elif content == "!add":
+                elif content == "add":
                     url = message.content.split()[1]
                     await self.add(message.guild, message.channel, message.author, url)
+
+                elif content == "queue":
+                    await self.queue(message.channel)
+                    print(content)
 
                 else:
                     await DedenneBot.send_message(message.channel, "%s 기능 미구현" % content)
@@ -103,15 +108,15 @@ class DedenneBot(discord.Client):
         await channel.send(self.__get_search_result_string(search_result))
 
         self.__add_task(
-            channel_id=channel.id,
+            channel_id=channel.__id,
             user_id=user_id,
             search_result=search_result
         )
 
     async def select(self, guild, channel, user, content):
         search_result = self.__get_task(
-            channel_id=channel.id,
-            user_id=user.id
+            channel_id=channel.__id,
+            user_id=user.__id
         )
 
         if search_result is not None:
@@ -151,10 +156,11 @@ class DedenneBot(discord.Client):
         self.voice_channel = user.voice.channel
 
         await self.voice_channel.connect()
+        self.set_state(State.READY)
 
-    async def leave(self, ctx):
+    async def leave(self, channel):
         if self.voice_channel is None:
-            await ctx.send("{}은 음성 채널에 참여하고 있지 않아요".format(self.user.name))
+            await DedenneBot.send_message(channel, "{}은 음성 채널에 참여하고 있지 않아요".format(self.user.name))
             return
 
         if self.voice_channel.is_connected():
@@ -163,9 +169,11 @@ class DedenneBot(discord.Client):
             self.voice_channel = None
             self.voice_client = None
 
+            self.set_state(State.LEAVE)
+            self.playing_start = False
+
         else:
-            await ctx.send("{}은 음성 채널에 참여하고 있지 않아요".format(self.user.name))
-            return
+            await DedenneBot.send_message(channel, "{}은 음성 채널에 참여하고 있지 않아요".format(self.user.name))
 
     async def play(self, guild, channel, user):
         if self.voice_channel is None:
@@ -180,35 +188,37 @@ class DedenneBot(discord.Client):
         url = "https://www.youtube.com/watch?v=" + target["id"]
 
         try:
+            self.set_state(State.PLAYING)
+
             self.voice_client = guild.voice_client
 
             player = await YTDLSource.from_url(url=url, loop=False, stream=True)
 
-            self.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+            self.voice_client.play(player, after=lambda e: asyncio.run(self.on_playing_end()))
 
-            await DedenneBot.send_message(channel, '**현재 재생 중인 영상:** {}'.format(player.title))
+            self.temp = {
+                "channel": channel,
+                "guild": guild,
+                "user": user
+            }
 
-            self.current_thread = threading.Thread(target=self.__check_playing_status, args=[guild, channel, user])
-            self.current_thread.daemon = True
-            self.current_thread.start()
-
-            self.set_state(State.PLAYING)
+            await DedenneBot.send_message(channel, '**현재 재생 중인 영상: {}**'.format(player.__title))
+            await DedenneBot.send_message(channel, '{}'.format(target["url"]))
 
         except Exception as e:
+            print("Error when try playing: " + e)
             await DedenneBot.send_message(channel, "재생 시도 중 오류 발생! {}".format(e))
+            self.set_state(State.READY)
 
-    def __check_playing_status(self, guild, channel, user):
-        while True:
-            time.sleep(1)
+    async def on_playing_end(self):
+        self.set_state(State.READY)
 
-            if self.state == State.PLAYING or self.state == State.PAUSE:
-                continue
+        if self.state == State.READY and self.__get_queue_length() > 0:
+            guild = self.temp["guild"]
+            channel = self.temp["channel"]
+            user = self.temp["user"]
 
-            if not self.voice_client.is_playing():
-                break
-
-        if self.__get_queue_length() > 0:
-            self.play(guild, channel, user)
+            await self.play(guild, channel, user)
 
     async def pause(self, ctx):
         if self.voice_channel is None:
@@ -252,6 +262,16 @@ class DedenneBot(discord.Client):
             self.set_state(State.STOP)
         else:
             await ctx.send("{}이 이전에 재생 중이던 노래가 없어요".format(self.user.name))
+
+    async def queue(self, channel):
+        msg = "재생목록\n"
+        for i in range(len(self.__queue)):
+            item = self.__queue[i]
+
+            msg += "{}. {}\n".format((i+1), item["title"])
+
+        DedenneBot.send_message(channel, msg)
+
 
     def __add_task(self, channel_id, user_id, search_result):
         key = str(channel_id) + "``" + str(user_id)

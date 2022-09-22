@@ -11,6 +11,8 @@ import urllib
 
 import youtube_dl
 
+from data.Video import Video
+
 youtube_dl.utils.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
@@ -86,16 +88,17 @@ class YoutubeHandler:
                 response_text = response.read()
                 item = json.loads(response_text.decode('utf-8'))
 
-                return {
-                    "id": url.split("=")[1],
-                    "title": item["title"],
-                    "url": item['thumbnail_url']
-                }
+                video = Video(
+                    video_id=url.split("=")[1],
+                    title=item["title"],
+                    thumbnail=item["thumbnail_url"]
+                )
+
+                return video
         except Exception as e:
-            print(e)
-            return {
-                "error": e
-            }
+            video = Video()
+            video.error = e
+            return video
 
     @staticmethod
     def __get_video_info(search_response):
@@ -105,10 +108,11 @@ class YoutubeHandler:
             item = search_response["items"][i]
 
             if item["id"]["kind"] == "youtube#video":
-                result.append({
-                    "id": item["id"]["videoId"],
-                    "title": item["snippet"]["title"],
-                    "url": item["snippet"]["thumbnails"]["high"]["url"]
-                })
+                video = Video(
+                    video_id=item["id"]["videoId"],
+                    title=item["snippet"]["title"],
+                    thumbnail=item["snippet"]["thumbnails"]["high"]["url"]
+                )
+                result.append(video)
 
         return result

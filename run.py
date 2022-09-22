@@ -1,6 +1,6 @@
 import discord
 
-from Bot.DedenneBot import DedenneBot
+from bot.DedenneBotv2 import DedenneBot
 from util import parse_json
 
 
@@ -10,4 +10,4 @@ my_intents.typing = False
 my_intents.presences = False
 
 client = DedenneBot(intents=my_intents)
-client.run(token=parse_json("./data/info.json")["discord"]["token"])  # 토큰
+client.run(token=parse_json("./json/info.json")["discord"]["token"])  # 토큰
