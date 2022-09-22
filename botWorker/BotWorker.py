@@ -117,7 +117,7 @@ class BotWorker:
 
             msg += "  " + str(i + 1) + ". " + item.title + "\n"
 
-        msg += "**선택 n으로 입력>>**"
+        msg += "'선택 n'으로 입력>>"
         return msg
 
     async def __search(self, item: Work):
@@ -137,6 +137,11 @@ class BotWorker:
             user_id=user_id,
             search_result=search_result
         )
+
+        for i in range(self.task_queue.length()):
+            if task.key == self.task_queue.get(i).key:
+                self.task_queue.remove_at(i)
+                break
 
         self.task_queue.enqueue(task)
 
@@ -190,7 +195,7 @@ class BotWorker:
     async def __queue(self, item: Work):
         channel = item.contents["channel"]
 
-        msg = "재생목록\n"
+        msg = "[현재 재생목록]\n"
         for i in range(self.music_queue.length()):
             item = self.music_queue.get(i)
 
@@ -199,15 +204,21 @@ class BotWorker:
         await self.bot.send_message(channel, msg)
 
     def __play_ended(self, error):
-            self.playing_state = PlayingState.END
+        if error:
+            print(str(error))
+            return
 
-            if self.music_queue.length() > 0:
-                fut = asyncio.run_coroutine_threadsafe(self.__play(), self.bot.loop)
-                try:
-                    fut.result()
-                except Exception as e:
-                    print(e)
+        if self.playing_state == PlayingState.STOP:
+            return
 
+        self.playing_state = PlayingState.END
+
+        if self.music_queue.length() > 0:
+            fut = asyncio.run_coroutine_threadsafe(self.__play(), self.bot.loop)
+            try:
+                fut.result()
+            except Exception as e:
+                print(e)
 
     async def __try_play(self, item: Work):
         if self.voice_channel is None:
@@ -285,24 +296,19 @@ class BotWorker:
             return
 
         if self.voice_client.is_playing():
-            await self.voice_client.stop()
+            self.voice_client.stop()
 
-            video = self.music_queue.dequeue()
+            await self.bot.send_message(channel, "노래를 스킵합니다".format(self.bot.user.name))
 
-            if video is None:
+            if self.music_queue.length() == 0:
                 self.playing_state = PlayingState.STOP
-
             else:
-                player = await YTDLSource.from_url(video.url, loop=False, stream=True)
+                await self.__play()
 
-                self.voice_client.play(player, after=lambda e: self.__play_ended())
-
-                self.playing_state = PlayingState.PLAYING
         else:
             await self.bot.send_message(channel, "{}이 이전에 재생 중이던 노래가 없어요".format(self.bot.user.name))
             return
 
-        await self.bot.send_message(channel, "노래를 스킵합니다".format(self.bot.user.name))
 
     async def __add_queue(self, item: Work):
         channel = item.contents["channel"]

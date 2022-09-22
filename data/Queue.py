@@ -14,6 +14,9 @@ class Queue:
 
         return None
 
+    def remove_at(self, i:int) -> any:
+        self.__items.pop(i)
+
     def shuffle(self) -> None:
         random.shuffle(self.__items)
 
