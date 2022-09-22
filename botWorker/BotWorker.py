@@ -130,7 +130,7 @@ class BotWorker:
         for i in range(len(search_result)):
             item = search_result[i]
 
-            msg += "  " + str(i + 1) + ". " + item.title + "\n"
+            msg += "    " + str(i + 1) + ". " + item.title + "\n"
 
         msg += "'선택 n'으로 입력>>"
         return msg
@@ -263,7 +263,7 @@ class BotWorker:
         try:
             # self.voice_client = self.guild.voice_client
 
-            player = await YTDLSource.from_url(video.url, loop=False, stream=False)
+            player = await YTDLSource.from_url(video.url, loop=False, stream=True)
 
             # self.voice_client.play(player, after=lambda e:asyncio.new_event_loop()(self.__play_ended()))
             # self.voice_client.play(player, after=lambda e: self.loop.run_until_complete(self.future))

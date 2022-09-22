@@ -168,5 +168,3 @@ cython_debug/
 *.json
 *.part
 *.webm
-*.txt
-.json/
