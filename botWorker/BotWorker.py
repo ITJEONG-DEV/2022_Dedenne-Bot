@@ -58,10 +58,12 @@ class BotWorker:
         await self.handle_list[item.command](item)
 
     async def __help(self, item: Work):
-        await self.bot.send_message(
-            channel=item.contents["channel"],
-            contents="help"
-        )
+        with open("json/help.txt", "r", encoding="UTF-8") as f:
+            contents = f.read()
+            await self.bot.send_message(
+                channel=item.contents["channel"],
+                contents=contents
+            )
 
     async def __introduce(self, item: Work):
         await self.bot.send_message(
@@ -261,7 +263,7 @@ class BotWorker:
         try:
             # self.voice_client = self.guild.voice_client
 
-            player = await YTDLSource.from_url(video.url, loop=False, stream=True)
+            player = await YTDLSource.from_url(video.url, loop=False, stream=False)
 
             # self.voice_client.play(player, after=lambda e:asyncio.new_event_loop()(self.__play_ended()))
             # self.voice_client.play(player, after=lambda e: self.loop.run_until_complete(self.future))
