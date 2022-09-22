@@ -335,14 +335,12 @@ class BotWorker:
             return
 
         if self.voice_client.is_playing():
+            if self.music_queue.length() == 0:
+                self.playing_state = PlayingState.STOP
+
             self.voice_client.stop()
 
             await self.bot.send_specify_message(channel, "skip_message")
-
-            if self.music_queue.length() == 0:
-                self.playing_state = PlayingState.STOP
-            else:
-                await self.__play()
 
         else:
             await self.bot.send_specify_message(channel, "isnt_playing_error", self.bot.user.name)
