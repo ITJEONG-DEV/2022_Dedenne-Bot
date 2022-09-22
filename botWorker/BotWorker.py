@@ -39,9 +39,11 @@ class BotWorker:
             "queue": self.__queue,
             "play": self.__play,
             "pause": self.__pause,
+            "resume": self.__resume,
             "stop": self.__stop,
             "skip": self.__skip,
             "add_queue": self.__add_queue,
+            "shuffle": self.__shuffle
         }
 
         self.youtube_handler = YoutubeHandler(parse_json("json/info.json")["youtube"]["api_key"])
@@ -68,6 +70,7 @@ class BotWorker:
         )
 
     async def __join(self, item: Work):
+        guild = item.contents["guild"]
         channel = item.contents["channel"]
         user = item.contents["author"]
 
@@ -77,26 +80,42 @@ class BotWorker:
 
         self.voice_channel = user.voice.channel
 
+        if self.voice_client is None:
+            self.voice_client = guild.voice_client
+
         try:
             await self.voice_channel.connect()
             self.playing_state = PlayingState.READY
+
+            await self.bot.send_specify_message(channel, "join_message", self.voice_channel.name)
+
         except Exception as e:
             print("Error when joining voice channel: " + e)
 
     async def __leave(self, item: Work):
+        guild = item.contents["guild"]
         channel = item.contents["channel"]
 
         if self.voice_channel is None:
             await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
             return
 
+        if self.voice_client is None:
+            self.voice_client = guild.voice_client
+
         if self.voice_client.is_connected():
+            self.playing_state = PlayingState.NONE
+
+            if self.voice_client.is_playing():
+                self.voice_client.stop()
+
             await self.voice_client.disconnect()
+
+            await self.bot.send_specify_message(channel, "leave_message", self.voice_channel.name)
 
             self.voice_channel = None
             self.voice_client = None
 
-            self.playing_state = PlayingState.NONE
         else:
             await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
 
@@ -195,10 +214,10 @@ class BotWorker:
 
     def __play_ended(self, error):
         if error:
-            print(str(error))
+            print("__play_ended gets error message: " + str(error))
             return
 
-        if self.playing_state == PlayingState.STOP:
+        if self.playing_state == PlayingState.STOP or self.playing_state == PlayingState.NONE:
             return
 
         self.playing_state = PlayingState.END
@@ -208,7 +227,7 @@ class BotWorker:
             try:
                 fut.result()
             except Exception as e:
-                print(e)
+                print("__play_ended gets error message 2: " + e)
 
     async def __try_play(self, item: Work):
         if self.voice_channel is None:
@@ -260,10 +279,26 @@ class BotWorker:
             return
 
         if self.voice_client.is_playing():
-            await self.voice_client.pause()
+            self.voice_client.pause()
             self.playing_state = PlayingState.PAUSE
 
             await self.bot.send_specify_message(channel, "pause_message")
+
+        else:
+            await self.bot.send_specify_message(channel, "not_playing_error", self.bot.user.name)
+
+    async def __resume(self, item: Work):
+        channel = item.contents["channel"]
+
+        if self.voice_channel is None or self.voice_client is None:
+            await self.bot.send_specify_message(channel, "not_join_error", self.bot.user.name)
+            return
+
+        if self.voice_client.is_paused():
+            self.voice_client.resume()
+            self.playing_state = PlayingState.PLAYING
+
+            await self.bot.send_specify_message(channel, "resume_message")
 
         else:
             await self.bot.send_specify_message(channel, "not_playing_error", self.bot.user.name)
@@ -298,7 +333,6 @@ class BotWorker:
 
             await self.bot.send_specify_message(channel, "skip_message")
 
-            print(self.music_queue.length())
             if self.music_queue.length() == 0:
                 self.playing_state = PlayingState.STOP
             else:
@@ -307,7 +341,6 @@ class BotWorker:
         else:
             await self.bot.send_specify_message(channel, "isnt_playing_error", self.bot.user.name)
             return
-
 
     async def __add_queue(self, item: Work):
         channel = item.contents["channel"]
@@ -319,3 +352,10 @@ class BotWorker:
         await self.bot.send_specify_message(channel, "add_queue_message", video.title)
 
         await self.__try_play(item)
+
+    async def __shuffle(self, item: Work):
+        channel = item.contents["channel"]
+
+        self.music_queue.shuffle()
+        await self.bot.send_specify_message(channel, "shuffle_message")
+        await self.__queue(item)
