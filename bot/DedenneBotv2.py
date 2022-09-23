@@ -1,4 +1,4 @@
-from botWorker import *
+from bot.botWorker import *
 from data import *
 from util import parse_json
 

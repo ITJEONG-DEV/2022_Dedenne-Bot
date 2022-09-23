@@ -5,13 +5,11 @@ import asyncio
 import discord
 
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from oauth2client.tools import argparser
 import urllib
 
 import youtube_dl
 
-from data.Video import Video
+from youtube.data.Video import Video
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
