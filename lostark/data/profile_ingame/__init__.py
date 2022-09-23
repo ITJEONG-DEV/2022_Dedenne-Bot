@@ -1,10 +1,9 @@
-from .SpecialItem import SpecialItem
-from .ProfileInfo import ProfileInfo
+from .profile_info import SpecialItem
+from .profile_info import ProfileInfo
 
 from .Slot import Slot
-from .Jewel import Jewel
-from .Card import Card, CardEffect
-from .CardDeck import CardDeck
+from .profile_jewel.Jewel import Jewel
+from .profile_card import Card, CardEffect, CardDeck
 from .ProfileEquipment import ProfileEquipment
 
 from .ProfileIngame import ProfileIngame

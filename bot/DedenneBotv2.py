@@ -2,6 +2,8 @@ from bot.botWorker import *
 from data import *
 from util import parse_json
 
+from lostark import get_character_data
+
 import discord
 
 ready = False
@@ -56,6 +58,26 @@ class DedenneBot(discord.Client):
                 )
 
                 await self.__worker.handle(item)
+
+            elif command == "l":
+                if content == "search":
+                    keyword = message.content.split()[-1]
+                    data = get_character_data(character_name=keyword)
+
+                    message1 = "{} {} {}\n".format(data.server, data.name, data.lv)
+                    message2 = "원정대 {}, 전투 {}\n장착 아이템 {}, 달성 아이템 {}\n칭호 {}, 길드 {}, PVP {}, 영지 {}, {}\n" \
+                        .format(data.profile_ingame.profile_info.expedition_lv,
+                                data.profile_ingame.profile_info.battle_lv,
+                                data.profile_ingame.profile_info.equip_item_lv,
+                                data.profile_ingame.profile_info.achieve_item_lv,
+                                data.profile_ingame.profile_info.title,
+                                data.profile_ingame.profile_info.guild,
+                                data.profile_ingame.profile_info.pvp_lv,
+                                data.profile_ingame.profile_info.estate_name,
+                                data.profile_ingame.profile_info.estate_lv)
+
+                    await self.send_message(message.channel, message1 + message2)
+                    await self.send_message(message.channel, data.profile_ingame.profile_equipment.src)
 
     async def send_specify_message(self, channel, error_name: str, name: str = ""):
         words = self.__error_messages[error_name]

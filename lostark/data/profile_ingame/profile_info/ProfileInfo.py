@@ -1,4 +1,4 @@
-from lostark.data.profile_ingame import SpecialItem
+from .SpecialItem import SpecialItem
 from lostark.util import *
 
 

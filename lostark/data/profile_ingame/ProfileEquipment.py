@@ -1,4 +1,4 @@
-from lostark.data.profile_ingame import Slot, Jewel, Card, CardEffect, CardDeck
+from . import Slot, Jewel, Card, CardEffect, CardDeck
 from lostark.util import *
 
 
