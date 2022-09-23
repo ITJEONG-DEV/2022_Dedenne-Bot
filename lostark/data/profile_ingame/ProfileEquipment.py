@@ -1,4 +1,4 @@
-from lostark.data.profile_ingame import Slot, Jewel
+from lostark.data.profile_ingame import Slot, Jewel, Card, CardEffect, CardDeck
 from lostark.util import *
 
 
@@ -9,7 +9,7 @@ class ProfileEquipment:
         self.__equipment_slot = []
         self.__avatar_slot = []
         self.__jewel_slot = []
-        self.__card_slot = []
+        self.__card_deck = None
 
         self.__parse__(bs_object)
 
@@ -28,9 +28,7 @@ class ProfileEquipment:
         for slot in self.__jewel_slot:
             s += str(slot) + "\n"
 
-        s += "\n카드\n"
-        for slot in self.__card_slot:
-            s += str(slot) + "\n"
+        s += str(self.__card_deck)
 
         return s
 
@@ -50,18 +48,23 @@ class ProfileEquipment:
             if "profile" in class_name:
                 continue
 
-            item_data = slot["data-item"]
-            grade = slot["data-grade"]
+            try:
+                item_data = slot["data-item"]
+                grade = slot["data-grade"]
 
-            img = get_bs_object(slot).img
-            src = img["src"]
+                img = get_bs_object(slot).img
+                src = img["src"]
 
-            self.__equipment_slot.append(Slot(
-                class_name=class_name,
-                grade=grade,
-                item=item_data,
-                src=src
-            ))
+                self.__equipment_slot.append(Slot(
+                    class_name=class_name,
+                    grade=grade,
+                    item=item_data,
+                    src=src
+                ))
+            except TypeError:
+                continue
+            except KeyError:
+                continue
 
     def __parse_profile_avatar_slot__(self, bs_object: BeautifulSoup):
         profile_avatar_slot = bs_object.find("div", {"class": "profile-avatar__slot"})
@@ -79,17 +82,20 @@ class ProfileEquipment:
             if grade == "":
                 continue
 
-            item_data = slot["data-item"]
+            try:
+                item_data = slot["data-item"]
 
-            img = get_bs_object(slot).img
-            src = img["src"]
+                img = get_bs_object(slot).img
+                src = img["src"]
 
-            self.__avatar_slot.append(Slot(
-                class_name=class_name,
-                grade=grade,
-                item=item_data,
-                src=src
-            ))
+                self.__avatar_slot.append(Slot(
+                    class_name=class_name,
+                    grade=grade,
+                    item=item_data,
+                    src=src
+                ))
+            except KeyError:
+                continue
 
     def __parse_profile_jewel_slot__(self, bs_object: BeautifulSoup):
         profile_jewel_slot = bs_object.find("div", {"class": "jewel-effect__wrap"})
@@ -176,10 +182,54 @@ class ProfileEquipment:
                     break
 
     def __parse_profile_card_slot__(self, bs_object: BeautifulSoup):
+        self.__card_deck = CardDeck()
+
+        # card
         profile_card_slot = bs_object.find("div", {"class": "profile-card__list"})
+        card_list = get_bs_object(profile_card_slot).findAll("li")
+        for i in range(len(card_list)):
+            card_item = get_bs_object(card_list[i])
 
-        print(profile_card_slot)
+            index = card_item.li["data-cardindex"]
 
+            slot = get_bs_object(card_item.find("div", {"class": "card-slot"}))
+
+            grade = slot.div["data-grade"]
+            item_data = slot.div["data-item"]
+
+            name = get_bs_object(slot.div).find("font").text
+
+            img = get_bs_object(slot.div).find("img")
+            src = get_bs_object(img).img["src"]
+
+            card = Card(
+                name=name,
+                index=index,
+                grade=grade,
+                item_data=item_data,
+                src=src
+            )
+
+            self.__card_deck.add_card(card)
+
+        # effect
+        profile_card_text = bs_object.find("div", {"class": "profile-card__content"})
+        effect_list = get_bs_object(profile_card_text).findAll("li")
+        for i in range(len(effect_list)):
+            effect_item = get_bs_object(effect_list[i]).li
+
+            index = effect_item["data-cardsetindex"]
+
+            title = get_bs_object(effect_item).find("div", {"class": "card-effect__title"}).text
+            description = get_bs_object(effect_item).find("div", {"class": "card-effect__dsc"}).text
+
+            effect = CardEffect(
+                index=index,
+                title=title,
+                description=description
+            )
+
+            self.__card_deck.add_effect(effect)
 
     def __parse__(self, bs_object: BeautifulSoup):
         # profile-equipment-character
@@ -196,7 +246,6 @@ class ProfileEquipment:
 
         # profile-card
         self.__parse_profile_card_slot__(bs_object)
-
 
     @property
     def src(self):
