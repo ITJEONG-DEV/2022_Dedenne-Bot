@@ -17,6 +17,14 @@ class CardDeck:
 
         return s
 
+    @property
+    def cards(self):
+        return self.__cards
+
+    @property
+    def effect(self):
+        return self.__effect
+
     def add_card(self, card: Card):
         self.__cards.append(card)
 

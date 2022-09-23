@@ -6,7 +6,7 @@ class Character:
         self.__name = name
 
     def __str__(self):
-        return " ".join([self.name, self.job, self.lv, self.src])
+        return " ".join([self.name, self.job, self.lv])
 
     # 직업
     @property

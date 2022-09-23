@@ -265,4 +265,4 @@ class ProfileEquipment:
 
     @property
     def card_slot(self):
-        return self.__card_slot
+        return self.__card_deck

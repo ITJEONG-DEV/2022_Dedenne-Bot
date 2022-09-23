@@ -27,12 +27,17 @@ class ProfileCharacter:
             characters = get_bs_object(all_characters_list[i]).findAll("li")
             for j in range(len(characters)):
                 character = get_bs_object(characters[j])
+                span = character.findAll("span")[0]
                 img = character.img
 
+                name = character.findAll("span")[-1].text.strip()
+                total = span.text.strip()
+                lv = span.text.strip()[:len(total)-len(name)]
+
                 server.add_character(
-                    name=character.findAll("span")[-1].text.strip(),
+                    name=name,
                     job=img["alt"].strip(),
-                    lv=img.text.strip(),
+                    lv=lv,
                     src=img["src"].strip()
                 )
 

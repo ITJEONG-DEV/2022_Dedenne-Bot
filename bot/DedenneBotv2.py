@@ -3,10 +3,128 @@ from data import *
 from util import parse_json
 
 from lostark import get_character_data
+from lostark import Profile
 
 import discord
 
 ready = False
+
+import unicodedata
+
+
+def fill_str_with_space(input_s="", max_size=40, fill_char="*"):
+    """
+    - 길이가 긴 문자는 2칸으로 체크하고, 짧으면 1칸으로 체크함.
+    - 최대 길이(max_size)는 40이며, input_s의 실제 길이가 이보다 짧으면
+    남은 문자를 fill_char로 채운다.
+    """
+    l = 0
+    for c in input_s:
+        if unicodedata.east_asian_width(c) in ['F', 'W']:
+            l += 2
+        else:
+            l += 1
+    return input_s + fill_char * (max_size - l)
+
+
+class Options(discord.ui.View):
+    def __init__(self, data: Profile):
+        super().__init__()
+
+        self.message = None
+        self.data = data
+
+    def set_message(self, message):
+        self.message = message
+
+    @discord.ui.button(label="기본 정보", style=discord.ButtonStyle.grey)
+    async def on_click_default_info(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title="{}의 정보".format(self.data.name),
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+
+        default_info = [
+            f"**{self.data.server}** 서버  **{self.data.lv}**",
+            f"원정대 레벨 **{self.data.profile_ingame.profile_info.expedition_lv}**\n 아이템 레벨 **{self.data.profile_ingame.profile_info.equip_item_lv}**/**{self.data.profile_ingame.profile_info.achieve_item_lv}**",
+            f"칭호 **{self.data.profile_ingame.profile_info.title}**\n길드 **{self.data.profile_ingame.profile_info.guild}**  PVP **{self.data.profile_ingame.profile_info.pvp_lv}**",
+            f"영지  **{self.data.profile_ingame.profile_info.estate_name}  {self.data.profile_ingame.profile_info.estate_lv}**"
+        ]
+
+        embed.add_field(name=self.data.name, value="\n".join(default_info))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="보유 캐릭터", style=discord.ButtonStyle.grey)
+    async def on_click_character_list(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title="{}의 보유 캐릭터".format(self.data.name),
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+
+        character_list = self.data.profile_character_list.character_list
+        msg = ""
+        for server in character_list:
+            msg += "**" + server.server + "**\n"
+            for character in server.characters:
+                msg += character.name + " " + character.lv + " " + character.job + "\n"
+            msg += "\n"
+
+        embed.add_field(name="보유 캐릭터 목록", value=msg)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="보석 정보", style=discord.ButtonStyle.grey)
+    async def on_click_jewel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title="{}의 보석".format(self.data.name),
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+
+        m = ""
+        for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
+            m += f"{jewel.info} {jewel.lv} {jewel.skill_name} {jewel.effect}\n"
+
+        embed.add_field(name="보석 정보", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="카드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_card(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title="{}의 카드".format(self.data.name),
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+
+        m = ""
+        for card in self.data.profile_ingame.profile_equipment.card_slot.cards:
+            m += f"{card.name}\n"
+
+        embed.add_field(name="카드 정보", value=m)
+
+        m = ""
+        for effect in self.data.profile_ingame.profile_equipment.card_slot.effect:
+            m += f"{effect.title} {effect.description}\n"
+
+        embed.add_field(name="카드 정보", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
 
 
 class DedenneBot(discord.Client):
@@ -61,23 +179,35 @@ class DedenneBot(discord.Client):
 
             elif command == "l":
                 if content == "search":
-                    keyword = message.content.split()[-1]
-                    data = get_character_data(character_name=keyword)
+                    await self.search_lostark(message)
 
-                    message1 = "{} {} {}\n".format(data.server, data.name, data.lv)
-                    message2 = "원정대 {}, 전투 {}\n장착 아이템 {}, 달성 아이템 {}\n칭호 {}, 길드 {}, PVP {}, 영지 {}, {}\n" \
-                        .format(data.profile_ingame.profile_info.expedition_lv,
-                                data.profile_ingame.profile_info.battle_lv,
-                                data.profile_ingame.profile_info.equip_item_lv,
-                                data.profile_ingame.profile_info.achieve_item_lv,
-                                data.profile_ingame.profile_info.title,
-                                data.profile_ingame.profile_info.guild,
-                                data.profile_ingame.profile_info.pvp_lv,
-                                data.profile_ingame.profile_info.estate_name,
-                                data.profile_ingame.profile_info.estate_lv)
+    async def search_lostark(self, message):
+        keyword = message.content.split()[-1]
+        data = get_character_data(character_name=keyword)
 
-                    await self.send_message(message.channel, message1 + message2)
-                    await self.send_message(message.channel, data.profile_ingame.profile_equipment.src)
+        embed = discord.Embed(
+            title="{}의 정보".format(data.name),
+            url="https://lostark.game.onstove.com/Profile/Character/" + data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_thumbnail(url=data.profile_ingame.profile_equipment.src)
+
+        default_info = [
+            f"**{data.server}** 서버  **{data.lv}**",
+            f"원정대 레벨 **{data.profile_ingame.profile_info.expedition_lv}**\n 아이템 레벨 **{data.profile_ingame.profile_info.equip_item_lv}**/**{data.profile_ingame.profile_info.achieve_item_lv}**",
+            f"칭호 **{data.profile_ingame.profile_info.title}**\n길드 **{data.profile_ingame.profile_info.guild}**  PVP **{data.profile_ingame.profile_info.pvp_lv}**",
+            f"영지  **{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**"
+        ]
+
+        embed.add_field(name=data.name, value="\n".join(default_info))
+
+        options = Options(data=data)
+
+        message = await message.channel.send(embed=embed, view=options)
+        options.set_message(message)
+        # await self.send_message(message.channel, message1 + message2)
+        # await self.send_message(message.channel, data.profile_ingame.profile_equipment.src)
 
     async def send_specify_message(self, channel, error_name: str, name: str = ""):
         words = self.__error_messages[error_name]

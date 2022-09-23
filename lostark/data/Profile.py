@@ -8,6 +8,7 @@ class Profile:
         self.__lv = bs_object.body.find("span", {"class": "profile-character-info__lv"}).text.strip()
         self.__name = bs_object.body.find("span", {"class": "profile-character-info__name"}).text.strip()
         self.__server = bs_object.body.find("span", {"class": "profile-character-info__server"}).text.strip()[1:]
+        self.__emblem = bs_object.body.find("img", {"class": "profile-character-info__img"})["src"]
 
         # character list
         profile_character_list = bs_object.body.find("div", {"class": "profile-character-list"})
@@ -18,8 +19,8 @@ class Profile:
         self.__profile_ingame = ProfileIngame(get_bs_object(profile_ingame))
 
     def __str__(self):
-        return '{} {} {}\n\n{}\n{}\n' \
-            .format(self.lv, self.name, self.server, self.profile_character_list, self.profile_ingame)
+        return '{} {} {} {}\n\n{}\n{}\n' \
+            .format(self.lv, self.name, self.server, self.emblem, self.profile_character_list, self.profile_ingame)
 
     @property
     def lv(self):
@@ -32,6 +33,10 @@ class Profile:
     @property
     def server(self):
         return self.__server
+
+    @property
+    def emblem(self):
+        return self.__emblem
 
     @property
     def profile_character_list(self):
