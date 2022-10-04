@@ -1,4 +1,4 @@
-from . import Slot, Jewel, Card, CardEffect, CardDeck
+from . import Slot, Jewel, Card, CardEffect, CardDeck, ProfileAbilityEngrave
 from lostark.util import *
 
 
@@ -10,6 +10,7 @@ class ProfileEquipment:
         self.__avatar_slot = []
         self.__jewel_slot = []
         self.__card_deck = None
+        self.__ability_engrave = []
 
         self.__parse__(bs_object)
 
@@ -29,6 +30,8 @@ class ProfileEquipment:
             s += str(slot) + "\n"
 
         s += str(self.__card_deck)
+
+        s += str(self.__ability_engrave)
 
         return s
 
@@ -231,6 +234,21 @@ class ProfileEquipment:
 
             self.__card_deck.add_effect(effect)
 
+    def __parse_profile_ability_engrave__(self, bs_object: BeautifulSoup):
+        self.__ability_engrave = ProfileAbilityEngrave()
+
+        # card
+        profile_ability_engrave = bs_object.find("div", {"class": "profile-ability-engrave"})
+        ability_ul = get_bs_object(profile_ability_engrave).findAll("ul")
+
+        for ul in ability_ul:
+            ability_li = get_bs_object(ul).findAll("li")
+            for li in ability_li:
+                ability = get_bs_object(li).find("span").text
+                effect = get_bs_object(li).find("p").text
+
+                self.__ability_engrave.add_ability(ability, effect)
+
     def __parse__(self, bs_object: BeautifulSoup):
         # profile-equipment-character
         self.__parse_profile_equipment_character__(bs_object)
@@ -246,6 +264,9 @@ class ProfileEquipment:
 
         # profile-card
         self.__parse_profile_card_slot__(bs_object)
+
+        # profile-ability-engrave
+        self.__parse_profile_ability_engrave__(bs_object)
 
     @property
     def src(self):
@@ -266,3 +287,7 @@ class ProfileEquipment:
     @property
     def card_slot(self):
         return self.__card_deck
+
+    @property
+    def ability_engrave_slot(self):
+        return self.__ability_engrave

@@ -83,7 +83,11 @@ class Options(discord.ui.View):
         m = f"치명 {self.data.state.fatal}\n특화 {self.data.state.specialization}\n제압 {self.data.state.overpowering}\n신속 {self.data.state.swiftness}\n인내 {self.data.state.patience}\n숙련 {self.data.state.skilled}"
         embed.add_field(name="전투 특성", value=m)
 
-        embed.add_field(name="각인 효과", value="각인1\n각인2\n각인3\n각인4\n각인5")
+        m = ""
+        for slot in self.data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
+            m += str(slot) + "\n"
+        embed.add_field(name="각인 효과", value=m)
+
         embed.add_field(name="성향", value="지성 \n담력 \n매력 \n친절 \n")
 
         await self.message.edit(embed=embed)
