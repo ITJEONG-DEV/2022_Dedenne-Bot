@@ -1,5 +1,4 @@
 import re
-import json
 
 from lostark.data.profile_character_list import ProfileCharacter
 from lostark.data.profile_ingame import ProfileIngame
@@ -24,12 +23,13 @@ class Profile:
         profile_ingame = bs_object.body.find("div", {"class": "profile-ingame"})
         self.__profile_ingame = ProfileIngame(get_bs_object(profile_ingame))
 
-        # profile-state
         scripts = bs_object.findAll("script", {"type": "text/javascript"})
-        self.__profile_state = ProfileState()
 
         for script in scripts:
+            # profile-state
             if "#chart-states" in script.text:
+                self.__profile_state = ProfileState()
+
                 contents = script.text
 
                 matched = re.search(r'lui.profile.StatesGraph(.*?);', contents, re.S)

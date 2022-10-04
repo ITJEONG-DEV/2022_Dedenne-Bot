@@ -1,3 +1,6 @@
+import re
+import json
+
 from . import Slot, Jewel, Card, CardEffect, CardDeck
 from . import ProfileAbilityEngrave
 from lostark.util import *
@@ -101,7 +104,7 @@ class ProfileEquipment:
             except KeyError:
                 continue
 
-    def __parse_profile_jewel_slot__(self, bs_object: BeautifulSoup):
+    def __parse_profile_jewel_slot__(self, bs_object: BeautifulSoup, script: json):
         profile_jewel_slot = bs_object.find("div", {"class": "jewel-effect__wrap"})
 
         jewel_wrap = get_bs_object(profile_jewel_slot).find("div", {"class": "jewel__wrap"})
@@ -110,6 +113,7 @@ class ProfileEquipment:
         jewel_effect = get_bs_object(profile_jewel_slot).find("div", {"class": "box_wrapper"})
         jewel_effect_list = get_bs_object(jewel_effect).findAll("li")
 
+        # current jewel
         current_jewel = []
         for i in range(len(jewel_span_list)):
             span = get_bs_object(jewel_span_list[i]).span
@@ -141,6 +145,7 @@ class ProfileEquipment:
                 if len(jewel.keys()) != 0:
                     current_jewel.append(jewel)
 
+        # current effect
         current_effect = []
         for i in range(len(jewel_effect_list)):
             item = get_bs_object(jewel_effect_list[i])
@@ -162,11 +167,20 @@ class ProfileEquipment:
 
             current_effect.append(jewel)
 
+        # jewel name
+        items = {}
+        for item in script["Equip"].items():
+            if "Gem" in item[0]:
+                text = get_bs_object(item[1]["Element_000"]["value"]).find("p").text
+                items[item[0]] = text
+
         for i in range(len(current_jewel)):
             for j in range(len(current_effect)):
                 if current_jewel[i]["id"] == current_effect[j]["id"]:
                     jewel = Jewel(
                         jewel_id=current_jewel[i]["id"],
+
+                        name=items[current_jewel[i]["item_data"]],
 
                         info=current_jewel[i]["info"],
                         lv=current_jewel[i]["lv"],
@@ -251,6 +265,13 @@ class ProfileEquipment:
                 self.__ability_engrave.add_ability(ability, effect)
 
     def __parse__(self, bs_object: BeautifulSoup):
+        scripts = bs_object.findAll("script")
+        target_script = None
+        for script in scripts:
+            if "Profile = {" in script.text:
+                matched = re.search(r'Profile = (.*?);', script.text, re.S)
+                target_script = json.loads(matched.group(1))
+
         # profile-equipment-character
         self.__parse_profile_equipment_character__(bs_object)
 
@@ -261,7 +282,7 @@ class ProfileEquipment:
         self.__parse_profile_avatar_slot__(bs_object)
 
         # profile-jewel
-        self.__parse_profile_jewel_slot__(bs_object)
+        self.__parse_profile_jewel_slot__(bs_object, target_script)
 
         # profile-card
         self.__parse_profile_card_slot__(bs_object)

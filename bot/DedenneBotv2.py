@@ -130,7 +130,7 @@ class Options(discord.ui.View):
 
         m = ""
         for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
-            m += f"{jewel.info} {jewel.lv} {jewel.skill_name} {jewel.effect}\n"
+            m += f"{jewel.name} {jewel.skill_name} {jewel.effect}\n"
 
         embed.add_field(name="보석 정보", value=m)
 

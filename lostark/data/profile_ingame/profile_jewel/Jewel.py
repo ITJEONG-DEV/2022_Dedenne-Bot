@@ -1,6 +1,8 @@
 class Jewel:
-    def __init__(self, jewel_id, info, lv, grade, equip_data, equip_src, effect_data, effect_src, skill_name, effect):
+    def __init__(self, jewel_id, name, info, lv, grade, equip_data, equip_src, effect_data, effect_src, skill_name, effect):
         self.__id = jewel_id
+
+        self.__name = name
 
         self.__info = info
         self.__lv = lv
@@ -15,12 +17,16 @@ class Jewel:
         self.__effect = effect
 
     def __str__(self):
-        return "{} {}, {} {}" \
-            .format(self.info, self.lv, self.skill_name, self.effect)
+        return "{} {} {}, {} {}" \
+            .format(self.name, self.info, self.lv, self.skill_name, self.effect)
 
     @property
     def jewel_id(self):
         return self.__id
+
+    @property
+    def name(self):
+        return self.__name
 
     @property
     def info(self):
