@@ -11,6 +11,8 @@ class ProfileEquipment:
         self.__src = ""
 
         self.__equipment_slot = []
+        self.__equipment_set_effect = []
+
         self.__avatar_slot = []
         self.__jewel_slot = []
         self.__card_deck = None
@@ -23,6 +25,10 @@ class ProfileEquipment:
 
         s += "\n착용 장비\n"
         for slot in self.__equipment_slot:
+            s += str(slot) + "\n"
+
+        s += "\n장비 세트 효과\n"
+        for slot in self.__equipment_set_effect:
             s += str(slot) + "\n"
 
         s += "\n아바타\n"
@@ -44,10 +50,11 @@ class ProfileEquipment:
         img = get_bs_object(profile_equipment_character).img
         self.__src = img["src"]
 
-    def __parse_profile_equipment_slot__(self, bs_object: BeautifulSoup):
+    def __parse_profile_equipment_slot__(self, bs_object: BeautifulSoup, script: json):
         profile_equipment_slot = bs_object.find("div", {"class": "profile-equipment__slot"})
         equipment_slot = get_bs_object(profile_equipment_slot).findAll("div")
 
+        parse_effect = False
         for i in range(len(equipment_slot)):
             slot = get_bs_object(equipment_slot[i]).div
             class_name = slot["class"][0]
@@ -62,12 +69,38 @@ class ProfileEquipment:
                 img = get_bs_object(slot).img
                 src = img["src"]
 
-                self.__equipment_slot.append(Slot(
+                slot = Slot(
                     class_name=class_name,
                     grade=grade,
                     item=item_data,
                     src=src
-                ))
+                )
+
+                self.__equipment_slot.append(slot)
+
+                if not parse_effect:
+                    data = script["Equip"][item_data]
+
+                    # set name
+                    top_str = data["Element_009"]["value"]["Element_000"]["topStr"]
+                    set_name = get_bs_object(top_str).find("font").text
+
+                    # set effect
+                    set_effect_obj = data["Element_009"]["value"]
+                    for item in set_effect_obj.items():
+                        if "000" in item[0]:
+                            continue
+
+                        content = item[1]["topStr"]
+                        name = " ".join(get_bs_object(content).find("font").text.split("[")[0].split(" ")[:-1])
+                        lv = get_bs_object(content).find("font", {"color": "#FFD200"}).text
+                        effect = get_bs_object(item[1]["contentStr"]["Element_000"]["contentStr"]).find("font").text
+
+                        self.__equipment_set_effect.append(f"{set_name}\t{name}\t{lv}\t{effect}")
+
+                    parse_effect = True
+                    # print(item)
+
             except TypeError:
                 continue
             except KeyError:
@@ -276,7 +309,7 @@ class ProfileEquipment:
         self.__parse_profile_equipment_character__(bs_object)
 
         # profile-equipment-slot
-        self.__parse_profile_equipment_slot__(bs_object)
+        self.__parse_profile_equipment_slot__(bs_object, target_script)
 
         # profile-avatar
         self.__parse_profile_avatar_slot__(bs_object)
@@ -297,6 +330,10 @@ class ProfileEquipment:
     @property
     def equipment_slot(self):
         return self.__equipment_slot
+
+    @property
+    def equipment_effect_slot(self):
+        return self.__equipment_set_effect
 
     @property
     def avatar_slot(self):

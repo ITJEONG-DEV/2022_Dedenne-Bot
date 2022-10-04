@@ -73,6 +73,35 @@ class Options(discord.ui.View):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
+    @discord.ui.button(label="세트효과 정보", style=discord.ButtonStyle.grey)
+    async def on_click_set_effect(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title=self.data.name + "@" + self.data.server + " " + self.data.lv,
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+
+        # m = ""
+        # for card in self.data.profile_ingame.profile_equipment.card_slot.cards:
+        #     m += f"{card.name}\n"
+        #
+        # embed.add_field(name="카드 정보", value=m)
+
+        m = ""
+        for effect in self.data.profile_ingame.profile_equipment.card_slot.effect:
+            m += f"{effect.title}\n"
+        embed.add_field(name="카드 세트 효과", value=m)
+
+        m = ""
+        for effect in self.data.profile_ingame.profile_equipment.equipment_effect_slot:
+            m += " ".join(effect.split("\t")[:-1]) + "\n"
+        embed.add_field(name="장비 세트 효과", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
     @discord.ui.button(label="특성 정보", style=discord.ButtonStyle.grey)
     async def on_click_ability_info(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
@@ -133,31 +162,6 @@ class Options(discord.ui.View):
             m += f"{jewel.name} {jewel.skill_name} {jewel.effect}\n"
 
         embed.add_field(name="보석 정보", value=m)
-
-        await self.message.edit(embed=embed)
-        await interaction.response.defer()
-
-    @discord.ui.button(label="카드 정보", style=discord.ButtonStyle.grey)
-    async def on_click_card(self, interaction: discord.Interaction, button: discord.ui.Button):
-        embed = discord.Embed(
-            title=self.data.name + "@" + self.data.server + " " + self.data.lv,
-            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
-            color=discord.Color.blue()
-        )
-
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
-
-        # m = ""
-        # for card in self.data.profile_ingame.profile_equipment.card_slot.cards:
-        #     m += f"{card.name}\n"
-        #
-        # embed.add_field(name="카드 정보", value=m)
-
-        m = ""
-        for effect in self.data.profile_ingame.profile_equipment.card_slot.effect:
-            m += f"{effect.title} {effect.description}\n"
-
-        embed.add_field(name="카드 효과", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
