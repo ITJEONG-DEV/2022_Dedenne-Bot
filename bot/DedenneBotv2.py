@@ -53,6 +53,11 @@ class Options(discord.ui.View):
         embed.add_field(name="영지",
                         value=f"**{self.data.profile_ingame.profile_info.estate_name}  {self.data.profile_ingame.profile_info.estate_lv}**")
 
+        m = ""
+        for slot in self.data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
+            m += str(slot) + "\n"
+        embed.add_field(name="각인 효과", value=m)
+
         m = f"공격력 {self.data.state.attack}\n최대 생명력 {self.data.state.hp}"
         embed.add_field(name="기본 특성", value=m)
 
@@ -83,12 +88,9 @@ class Options(discord.ui.View):
         m = f"치명 {self.data.state.fatal}\n특화 {self.data.state.specialization}\n제압 {self.data.state.overpowering}\n신속 {self.data.state.swiftness}\n인내 {self.data.state.patience}\n숙련 {self.data.state.skilled}"
         embed.add_field(name="전투 특성", value=m)
 
-        m = ""
-        for slot in self.data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
-            m += str(slot) + "\n"
-        embed.add_field(name="각인 효과", value=m)
-
-        embed.add_field(name="성향", value="지성 \n담력 \n매력 \n친절 \n")
+        state = self.data.profile_state
+        m = f"지성 {state.intellect}\n담력 {state.courage}\n매력 {state.charm}\n친절 {state.kindness}\n"
+        embed.add_field(name="성향", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -232,6 +234,11 @@ class DedenneBot(discord.Client):
         embed.add_field(name="아이템 레벨", value=data.profile_ingame.profile_info.equip_item_lv)
         embed.add_field(name="영지",
                         value=f"**{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**")
+
+        m = ""
+        for slot in data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
+            m += str(slot) + "\n"
+        embed.add_field(name="각인 효과", value=m)
 
         m = f"공격력 {data.state.attack}\n최대 생명력 {data.state.hp}"
         embed.add_field(name="기본 특성", value=m)

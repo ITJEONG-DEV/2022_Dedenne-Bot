@@ -1,6 +1,9 @@
+import re
+import json
+
 from lostark.data.profile_character_list import ProfileCharacter
 from lostark.data.profile_ingame import ProfileIngame
-from . import CharacterState
+from . import CharacterState, ProfileState
 from lostark.util import *
 
 
@@ -21,10 +24,34 @@ class Profile:
         profile_ingame = bs_object.body.find("div", {"class": "profile-ingame"})
         self.__profile_ingame = ProfileIngame(get_bs_object(profile_ingame))
 
+        # profile-state
+        scripts = bs_object.findAll("script", {"type": "text/javascript"})
+        self.__profile_state = ProfileState()
+
+        for script in scripts:
+            if "#chart-states" in script.text:
+                contents = script.text
+
+                matched = re.search(r'lui.profile.StatesGraph(.*?);', contents, re.S)
+
+                content = matched.group(1)
+
+                words = content.split()
+
+                intellect = int(words[5][1:-1])
+                courage = int(words[6][:-1])
+                charm = int(words[7][:-1])
+                kindness = int(words[8][:-2])
+
+                self.__profile_state.intellect = intellect
+                self.__profile_state.courage = courage
+                self.__profile_state.charm = charm
+                self.__profile_state.kindness = kindness
+
     def __str__(self):
-        return '{} {} {} {} {}\n\n{}\n{}\n' \
+        return '{} {} {} {} {}\n\n{}\n{}\n{}\n' \
             .format(self.lv, self.name, self.server, self.emblem, self.state, self.profile_character_list,
-                    self.profile_ingame)
+                    self.profile_ingame, self.profile_state)
 
     @property
     def lv(self):
@@ -53,3 +80,7 @@ class Profile:
     @property
     def profile_ingame(self):
         return self.__profile_ingame
+
+    @property
+    def profile_state(self):
+        return self.__profile_state

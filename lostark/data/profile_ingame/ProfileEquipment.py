@@ -1,4 +1,5 @@
-from . import Slot, Jewel, Card, CardEffect, CardDeck, ProfileAbilityEngrave
+from . import Slot, Jewel, Card, CardEffect, CardDeck
+from . import ProfileAbilityEngrave
 from lostark.util import *
 
 
