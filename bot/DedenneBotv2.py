@@ -73,7 +73,7 @@ class Options(discord.ui.View):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="세트효과 정보", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="세트 효과 정보", style=discord.ButtonStyle.grey)
     async def on_click_set_effect(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -124,6 +124,25 @@ class Options(discord.ui.View):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
+    @discord.ui.button(label="보석 정보", style=discord.ButtonStyle.grey)
+    async def on_click_jewel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title=self.data.name + "@" + self.data.server + " " + self.data.lv,
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+
+        m = ""
+        for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
+            m += f"{jewel.name} {jewel.skill_name} {jewel.effect}\n"
+
+        embed.add_field(name="보석 정보", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
     @discord.ui.button(label="보유 캐릭터", style=discord.ButtonStyle.grey)
     async def on_click_character_list(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
@@ -143,25 +162,6 @@ class Options(discord.ui.View):
             msg += "\n"
 
         embed.add_field(name="보유 캐릭터 목록", value=msg)
-
-        await self.message.edit(embed=embed)
-        await interaction.response.defer()
-
-    @discord.ui.button(label="보석 정보", style=discord.ButtonStyle.grey)
-    async def on_click_jewel(self, interaction: discord.Interaction, button: discord.ui.Button):
-        embed = discord.Embed(
-            title=self.data.name + "@" + self.data.server + " " + self.data.lv,
-            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
-            color=discord.Color.blue()
-        )
-
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
-
-        m = ""
-        for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
-            m += f"{jewel.name} {jewel.skill_name} {jewel.effect}\n"
-
-        embed.add_field(name="보석 정보", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
