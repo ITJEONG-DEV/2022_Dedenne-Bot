@@ -21,6 +21,9 @@ def get_character_data(base_url="https://lostark.game.onstove.com/Profile/Charac
     character_name = urllib.parse.quote_plus(character_name)
     bs_object = get_html_object(base_url + character_name)
 
+    if "캐릭터 정보가 없습니다." in bs_object.text:
+        return None
+
     return Profile(bs_object)
 
 

@@ -84,6 +84,7 @@ class Options(discord.ui.View):
         )
 
         embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
 
         # m = ""
         # for card in self.data.profile_ingame.profile_equipment.card_slot.cards:
@@ -140,6 +141,7 @@ class Options(discord.ui.View):
             color=discord.Color.blue()
         )
 
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
         embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
 
         m = ""
@@ -184,6 +186,7 @@ class Options(discord.ui.View):
         )
 
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
 
         stability = self.data.profile_stability
 
@@ -255,44 +258,49 @@ class DedenneBot(discord.Client):
         keyword = message.content.split()[-1]
         data = get_character_data(character_name=keyword)
 
-        embed = discord.Embed(
-            title=data.name + "@" + data.server + " " + data.lv,
-            url="https://lostark.game.onstove.com/Profile/Character/" + data.name,
-            color=discord.Color.blue()
-        )
+        if data is None:
+            await self.send_specify_message(channel=message.channel, error_name="character_not_found", name=keyword)
 
-        embed.set_image(url=data.profile_ingame.profile_equipment.src)
-        embed.set_footer(text=data.name, icon_url=data.emblem)
+        else:
 
-        embed.add_field(name="원정대 레벨", value=data.profile_ingame.profile_info.expedition_lv)
-        embed.add_field(name="아이템 레벨", value=data.profile_ingame.profile_info.equip_item_lv)
-        embed.add_field(name="영지",
-                        value=f"**{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**")
+            embed = discord.Embed(
+                title=data.name + "@" + data.server + " " + data.lv,
+                url="https://lostark.game.onstove.com/Profile/Character/" + data.name,
+                color=discord.Color.blue()
+            )
 
-        m = ""
-        for slot in data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
-            m += str(slot) + "\n"
-        if m == "":
-            m = "-"
-        embed.add_field(name="각인 효과", value=m)
+            embed.set_image(url=data.profile_ingame.profile_equipment.src)
+            embed.set_footer(text=data.name, icon_url=data.emblem)
 
-        m = f"공격력 {data.state.attack}\n최대 생명력 {data.state.hp}"
-        embed.add_field(name="기본 특성", value=m)
+            embed.add_field(name="원정대 레벨", value=data.profile_ingame.profile_info.expedition_lv)
+            embed.add_field(name="아이템 레벨", value=data.profile_ingame.profile_info.equip_item_lv)
+            embed.add_field(name="영지",
+                            value=f"**{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**")
 
-        # default_info = [
-        #     f"원정대 레벨 **{data.profile_ingame.profile_info.expedition_lv}**\n 아이템 레벨 **{data.profile_ingame.profile_info.equip_item_lv}**/**{data.profile_ingame.profile_info.achieve_item_lv}**",
-        #     f"칭호 **{data.profile_ingame.profile_info.title}**\n길드 **{data.profile_ingame.profile_info.guild}**  PVP **{data.profile_ingame.profile_info.pvp_lv}**",
-        #     f"영지  **{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**"
-        # ]
-        #
-        # embed.add_field(name=data.name+"@"+data.server+" "+data.lv, value="\n".join(default_info))
+            m = ""
+            for slot in data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
+                m += str(slot) + "\n"
+            if m == "":
+                m = "-"
+            embed.add_field(name="각인 효과", value=m)
 
-        options = Options(data=data)
+            m = f"공격력 {data.state.attack}\n최대 생명력 {data.state.hp}"
+            embed.add_field(name="기본 특성", value=m)
 
-        message = await message.channel.send(embed=embed, view=options)
-        options.set_message(message)
-        # await self.send_message(message.channel, message1 + message2)
-        # await self.send_message(message.channel, data.profile_ingame.profile_equipment.src)
+            # default_info = [
+            #     f"원정대 레벨 **{data.profile_ingame.profile_info.expedition_lv}**\n 아이템 레벨 **{data.profile_ingame.profile_info.equip_item_lv}**/**{data.profile_ingame.profile_info.achieve_item_lv}**",
+            #     f"칭호 **{data.profile_ingame.profile_info.title}**\n길드 **{data.profile_ingame.profile_info.guild}**  PVP **{data.profile_ingame.profile_info.pvp_lv}**",
+            #     f"영지  **{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**"
+            # ]
+            #
+            # embed.add_field(name=data.name+"@"+data.server+" "+data.lv, value="\n".join(default_info))
+
+            options = Options(data=data)
+
+            message = await message.channel.send(embed=embed, view=options)
+            options.set_message(message)
+            # await self.send_message(message.channel, message1 + message2)
+            # await self.send_message(message.channel, data.profile_ingame.profile_equipment.src)
 
     async def send_specify_message(self, channel, error_name: str, name: str = ""):
         words = self.__error_messages[error_name]

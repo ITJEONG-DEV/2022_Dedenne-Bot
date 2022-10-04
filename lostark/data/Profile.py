@@ -7,7 +7,7 @@ from lostark.util import *
 
 
 class Profile:
-    def __init__(self, bs_object):
+    def __init__(self, bs_object: BeautifulSoup):
         self.__lv = bs_object.body.find("span", {"class": "profile-character-info__lv"}).text.strip()
         self.__name = bs_object.body.find("span", {"class": "profile-character-info__name"}).text.strip()
         self.__server = bs_object.body.find("span", {"class": "profile-character-info__server"}).text.strip()[1:]
