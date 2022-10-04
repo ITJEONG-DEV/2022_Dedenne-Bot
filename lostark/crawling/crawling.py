@@ -25,9 +25,9 @@ def get_character_data(base_url="https://lostark.game.onstove.com/Profile/Charac
 
 
 if __name__ == "__main__":
-    bs_object = get_html_object_korean()
-    print(str(bs_object))
+    # bs_object = get_html_object_korean()
+    # print(str(bs_object))
 
-    # data = get_character_data(character_name="데덴네귀여워")
+    data = get_character_data(character_name="데덴네귀여워")
 
-    # print(str(data))
+    print(str(data))

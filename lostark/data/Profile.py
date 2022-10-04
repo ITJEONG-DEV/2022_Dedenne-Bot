@@ -2,7 +2,7 @@ import re
 
 from lostark.data.profile_character_list import ProfileCharacter
 from lostark.data.profile_ingame import ProfileIngame
-from . import CharacterState, ProfileState
+from . import CharacterState, ProfileState, Info, ProfileStability
 from lostark.util import *
 
 
@@ -48,10 +48,26 @@ class Profile:
                 self.__profile_state.charm = charm
                 self.__profile_state.kindness = kindness
 
+            if "_memberNo" in script.text:
+                self.__info = Info()
+
+                contents = script.text.split("\n")[1:4]
+
+                member_no = contents[0].split("'")[1]
+                pc_id = contents[1].split("'")[1]
+                world_no = contents[2].split("'")[1]
+
+                self.__info.member_no = member_no
+                self.__info.pc_id = pc_id
+                self.__info.world_no = world_no
+
+        # profile-stability
+        self.__profile_stability = ProfileStability(bs_object, self.__info)
+
     def __str__(self):
-        return '{} {} {} {} {}\n\n{}\n{}\n{}\n' \
+        return '{} {} {} {} {}\n\n{}\n{}\n{}\n{}\n' \
             .format(self.lv, self.name, self.server, self.emblem, self.state, self.profile_character_list,
-                    self.profile_ingame, self.profile_state)
+                    self.profile_ingame, self.profile_state, self.profile_stability)
 
     @property
     def lv(self):
@@ -84,3 +100,7 @@ class Profile:
     @property
     def profile_state(self):
         return self.__profile_state
+
+    @property
+    def profile_stability(self):
+        return self.__profile_stability

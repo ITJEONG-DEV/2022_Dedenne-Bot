@@ -185,10 +185,13 @@ class Options(discord.ui.View):
 
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
 
-        stability = self.data.profile_ingame.profile_stability
+        stability = self.data.profile_stability
 
         life_skill = stability.profile_skill_life
         embed.add_field(name="생활 스킬", value="\n".join(life_skill.skill))
+
+        collection = stability.profile_collection
+        embed.add_field(name="수집형 포인트", value=str(collection))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
