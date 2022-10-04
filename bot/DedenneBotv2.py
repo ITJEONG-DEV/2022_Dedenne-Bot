@@ -166,6 +166,24 @@ class Options(discord.ui.View):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
+    @discord.ui.button(label="내실", style=discord.ButtonStyle.grey)
+    async def on_click_stability(self, interaction: discord.Interaction, button: discord.ui.Button):
+        embed = discord.Embed(
+            title=self.data.name + "@" + self.data.server + " " + self.data.lv,
+            url="https://lostark.game.onstove.com/Profile/Character/" + self.data.name,
+            color=discord.Color.blue()
+        )
+
+        embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+
+        stability = self.data.profile_ingame.profile_stability
+
+        life_skill = stability.profile_skill_life
+        embed.add_field(name="생활 스킬", value="\n".join(life_skill.skill))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
 
 class DedenneBot(discord.Client):
     async def on_ready(self):
