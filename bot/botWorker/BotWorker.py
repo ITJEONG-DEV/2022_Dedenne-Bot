@@ -188,23 +188,27 @@ class BotWorker:
 
     async def __add(self, item: Work):
         channel = item.contents["channel"]
-        url = item.contents["message"].split()[1]
 
-        video = self.youtube_handler.get_video_info(url)
+        try:
+            url = item.contents["message"].split()[1]
 
-        if video.error is not None:
-            await self.bot.send_specify_message(channel, "invalid_link_error")
-            return
+            video = self.youtube_handler.get_video_info(url)
 
-        contents = item.contents
-        contents["video"] = video
+            if video.error is not None:
+                await self.bot.send_specify_message(channel, "invalid_link_error")
+                return
 
-        work = Work(
-            command="add_queue",
-            contents=contents
-        )
+            contents = item.contents
+            contents["video"] = video
 
-        await self.__add_queue(work)
+            work = Work(
+                command="add_queue",
+                contents=contents
+            )
+
+            await self.__add_queue(work)
+        except IndexError:
+            await self.__try_play(Work(command="play", contents=item.contents))
 
     async def __queue(self, item: Work):
         channel = item.contents["channel"]
