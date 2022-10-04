@@ -11,7 +11,7 @@ class ProfileEquipment:
         self.__src = ""
 
         self.__equipment_slot = []
-        self.__equipment_set_effect = []
+        self.__equipment_set_effect = set([])
 
         self.__avatar_slot = []
         self.__jewel_slot = []
@@ -81,27 +81,24 @@ class ProfileEquipment:
 
                 self.__equipment_slot.append(slot)
 
-                if not parse_effect:
-                    data = script["Equip"][item_data]
+                data = script["Equip"][item_data]
 
-                    # set name
-                    top_str = data["Element_009"]["value"]["Element_000"]["topStr"]
-                    set_name = get_bs_object(top_str).find("font").text
+                # set name
+                top_str = data["Element_009"]["value"]["Element_000"]["topStr"]
+                set_name = get_bs_object(top_str).find("font").text
 
-                    # set effect
-                    set_effect_obj = data["Element_009"]["value"]
-                    for item in set_effect_obj.items():
-                        if "000" in item[0]:
-                            continue
-
-                        content = item[1]["topStr"]
-                        name = " ".join(get_bs_object(content).find("font").text.split("[")[0].split(" ")[:-1])
-                        lv = get_bs_object(content).find("font", {"color": "#FFD200"}).text
+                # set effect
+                set_effect_obj = data["Element_009"]["value"]
+                for item in set_effect_obj.items():
+                    content = item[1]["topStr"]
+                    name = " ".join(get_bs_object(content).find("font").text.split("[")[0].split(" ")[:-1])
+                    lv = get_bs_object(content).find("font", {"color": "#FFD200"})
+                    if lv is not None:
+                        lv = lv.text
                         effect = get_bs_object(item[1]["contentStr"]["Element_000"]["contentStr"]).find("font").text
 
-                        self.__equipment_set_effect.append(f"{set_name}\t{name}\t{lv}\t{effect}")
+                        self.__equipment_set_effect.add(f"{set_name}\t{name}\t{lv}\t{effect}")
 
-                    parse_effect = True
                     # print(item)
 
             except TypeError:

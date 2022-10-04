@@ -99,7 +99,9 @@ class Options(discord.ui.View):
         embed.add_field(name="카드 세트 효과", value=m)
 
         m = ""
-        for effect in self.data.profile_ingame.profile_equipment.equipment_effect_slot:
+        effect_list = list(self.data.profile_ingame.profile_equipment.equipment_effect_slot)
+        effect_list.sort()
+        for effect in effect_list:
             m += " ".join(effect.split("\t")[:-1]) + "\n"
         if m == "":
             m = "-"
