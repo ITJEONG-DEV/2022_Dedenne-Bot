@@ -51,6 +51,9 @@ class ProfileEquipment:
         self.__src = img["src"]
 
     def __parse_profile_equipment_slot__(self, bs_object: BeautifulSoup, script: json):
+        if script is None:
+            return
+
         profile_equipment_slot = bs_object.find("div", {"class": "profile-equipment__slot"})
         equipment_slot = get_bs_object(profile_equipment_slot).findAll("div")
 
@@ -138,6 +141,9 @@ class ProfileEquipment:
                 continue
 
     def __parse_profile_jewel_slot__(self, bs_object: BeautifulSoup, script: json):
+        if script is None:
+            return
+
         profile_jewel_slot = bs_object.find("div", {"class": "jewel-effect__wrap"})
 
         jewel_wrap = get_bs_object(profile_jewel_slot).find("div", {"class": "jewel__wrap"})

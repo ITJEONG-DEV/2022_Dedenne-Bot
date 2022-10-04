@@ -56,6 +56,8 @@ class Options(discord.ui.View):
         m = ""
         for slot in self.data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
             m += str(slot) + "\n"
+        if m == "":
+            m = "-"
         embed.add_field(name="각인 효과", value=m)
 
         m = f"공격력 {self.data.state.attack}\n최대 생명력 {self.data.state.hp}"
@@ -92,11 +94,15 @@ class Options(discord.ui.View):
         m = ""
         for effect in self.data.profile_ingame.profile_equipment.card_slot.effect:
             m += f"{effect.title}\n"
+        if m == "":
+            m = "-"
         embed.add_field(name="카드 세트 효과", value=m)
 
         m = ""
         for effect in self.data.profile_ingame.profile_equipment.equipment_effect_slot:
             m += " ".join(effect.split("\t")[:-1]) + "\n"
+        if m == "":
+            m = "-"
         embed.add_field(name="장비 세트 효과", value=m)
 
         await self.message.edit(embed=embed)
@@ -137,7 +143,8 @@ class Options(discord.ui.View):
         m = ""
         for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
             m += f"{jewel.name} {jewel.skill_name} {jewel.effect}\n"
-
+        if m == "":
+            m = "-"
         embed.add_field(name="보석 정보", value=m)
 
         await self.message.edit(embed=embed)
@@ -260,6 +267,8 @@ class DedenneBot(discord.Client):
         m = ""
         for slot in data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
             m += str(slot) + "\n"
+        if m == "":
+            m = "-"
         embed.add_field(name="각인 효과", value=m)
 
         m = f"공격력 {data.state.attack}\n최대 생명력 {data.state.hp}"
