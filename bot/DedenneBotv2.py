@@ -2,33 +2,16 @@ from bot.botWorker import *
 from data import *
 from util import parse_json
 
-from lostark import get_character_data
-from lostark import Profile
+from lostark import get_character_data, get_mari_shop
+from lostark import Profile, MariShop
 
 import discord
 
 ready = False
 
-import unicodedata
 
-
-def fill_str_with_space(input_s="", max_size=40, fill_char="*"):
-    """
-    - 길이가 긴 문자는 2칸으로 체크하고, 짧으면 1칸으로 체크함.
-    - 최대 길이(max_size)는 40이며, input_s의 실제 길이가 이보다 짧으면
-    남은 문자를 fill_char로 채운다.
-    """
-    l = 0
-    for c in input_s:
-        if unicodedata.east_asian_width(c) in ['F', 'W']:
-            l += 2
-        else:
-            l += 1
-    return input_s + fill_char * (max_size - l)
-
-
-class Options(discord.ui.View):
-    def __init__(self, data: Profile):
+class DefaultView(discord.ui.View):
+    def __init__(self, data):
         super().__init__()
 
         self.message = None
@@ -36,6 +19,11 @@ class Options(discord.ui.View):
 
     def set_message(self, message):
         self.message = message
+
+
+class CharacterView(DefaultView):
+    def __init__(self, data: Profile):
+        super().__init__(data)
 
     @discord.ui.button(label="기본 정보", style=discord.ButtonStyle.grey)
     async def on_click_default_info(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -63,15 +51,6 @@ class Options(discord.ui.View):
         m = f"공격력 {self.data.state.attack}\n최대 생명력 {self.data.state.hp}"
         embed.add_field(name="기본 특성", value=m)
 
-        # default_info = [
-        #     f"**{self.data.lv}**",
-        #     f"원정대 레벨 **{self.data.profile_ingame.profile_info.expedition_lv}**\n 아이템 레벨 **{self.data.profile_ingame.profile_info.equip_item_lv}**/**{self.data.profile_ingame.profile_info.achieve_item_lv}**",
-        #     f"칭호 **{self.data.profile_ingame.profile_info.title}**\n길드 **{self.data.profile_ingame.profile_info.guild}**  PVP **{self.data.profile_ingame.profile_info.pvp_lv}**",
-        #     f"영지  **{self.data.profile_ingame.profile_info.estate_name}  {self.data.profile_ingame.profile_info.estate_lv}**"
-        # ]
-        #
-        # embed.add_field(name=self.data.name+"@"+self.data.server+" "+self.data.lv, value="\n".join(default_info))
-
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
@@ -85,12 +64,6 @@ class Options(discord.ui.View):
 
         embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
-
-        # m = ""
-        # for card in self.data.profile_ingame.profile_equipment.card_slot.cards:
-        #     m += f"{card.name}\n"
-        #
-        # embed.add_field(name="카드 정보", value=m)
 
         m = ""
         for effect in self.data.profile_ingame.profile_equipment.card_slot.effect:
@@ -119,7 +92,7 @@ class Options(discord.ui.View):
             color=discord.Color.blue()
         )
 
-        # embed.set_image(url=self.data.profile_ingame.profile_equipment.src)
+        # embed.set_image(url=self.profile.profile_ingame.profile_equipment.src)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
         embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
 
@@ -200,9 +173,78 @@ class Options(discord.ui.View):
         await interaction.response.defer()
 
 
+class MariShopView(DefaultView):
+    def __init__(self, data: MariShop):
+        super().__init__(data)
+    @discord.ui.button(label="성장 추천", style=discord.ButtonStyle.grey)
+    async def on_click_tab1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        button.label = self.data.tab1_name
+
+        embed = discord.Embed(
+            title=self.data.title,
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        # embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+        # embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+
+        m = ""
+        for i in range(len(self.data.tab1)):
+            item = self.data.tab1[i]
+            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+        if m == "":
+            m = "현재 판매 상품이 없습니다"
+        embed.add_field(name="현재 판매 상품", value=m)
+
+        m = ""
+        for i in range(len(self.data.tab1_pre)):
+            item = self.data.tab1_pre[i]
+            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+        if m == "":
+            m = "이전 판매 상품이 없습니다"
+        embed.add_field(name="이전 판매 상품", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="전투ㆍ생활 추천", style=discord.ButtonStyle.grey)
+    async def on_click_tab2(self, interaction: discord.Interaction, button: discord.ui.Button):
+        print("tab2 button label:" + button.label)
+        button.label = self.data.tab2_name
+        print("tab2 button label:" + button.label)
+
+        embed = discord.Embed(
+            title=self.data.title,
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        # embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+        # embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+
+        m = ""
+        for i in range(len(self.data.tab2)):
+            item = self.data.tab2[i]
+            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+        if m == "":
+            m = "현재 판매 상품이 없습니다"
+        embed.add_field(name="현재 판매 상품", value=m)
+
+        m = ""
+        for i in range(len(self.data.tab2_pre)):
+            item = self.data.tab2_pre[i]
+            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+        if m == "":
+            m = "이전 판매 상품이 없습니다"
+        embed.add_field(name="이전 판매 상품", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
 class DedenneBot(discord.Client):
     async def on_ready(self):
-        # word data
+        # word profile
         self.__words = parse_json("json/command_collection.json")
         self.__error_messages = parse_json("json/error_messages.json")
 
@@ -254,6 +296,9 @@ class DedenneBot(discord.Client):
                 if content == "search":
                     await self.search_lostark(message)
 
+                elif content == "mari":
+                    await self.show_mari_shop(message)
+
     async def search_lostark(self, message):
         keyword = message.content.split()[-1]
         data = get_character_data(character_name=keyword)
@@ -287,20 +332,43 @@ class DedenneBot(discord.Client):
             m = f"공격력 {data.state.attack}\n최대 생명력 {data.state.hp}"
             embed.add_field(name="기본 특성", value=m)
 
-            # default_info = [
-            #     f"원정대 레벨 **{data.profile_ingame.profile_info.expedition_lv}**\n 아이템 레벨 **{data.profile_ingame.profile_info.equip_item_lv}**/**{data.profile_ingame.profile_info.achieve_item_lv}**",
-            #     f"칭호 **{data.profile_ingame.profile_info.title}**\n길드 **{data.profile_ingame.profile_info.guild}**  PVP **{data.profile_ingame.profile_info.pvp_lv}**",
-            #     f"영지  **{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**"
-            # ]
-            #
-            # embed.add_field(name=data.name+"@"+data.server+" "+data.lv, value="\n".join(default_info))
-
-            options = Options(data=data)
+            options = CharacterView(data=data)
 
             message = await message.channel.send(embed=embed, view=options)
             options.set_message(message)
-            # await self.send_message(message.channel, message1 + message2)
-            # await self.send_message(message.channel, data.profile_ingame.profile_equipment.src)
+
+    async def show_mari_shop(self, message):
+        data = get_mari_shop()
+
+        embed = discord.Embed(
+            title=data.title,
+            url=data.url,
+            color=discord.Color.blue()
+        )
+
+        # embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
+        # embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+
+        m = ""
+        for i in range(len(data.tab1)):
+            item = data.tab1[i]
+            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+        if m == "":
+            m = "현재 판매 상품이 없습니다"
+        embed.add_field(name="현재 판매 상품", value=m)
+
+        m = ""
+        for i in range(len(data.tab1_pre)):
+            item = data.tab1_pre[i]
+            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+        if m == "":
+            m = "이전 판매 상품이 없습니다"
+        embed.add_field(name="이전 판매 상품", value=m)
+
+        options = MariShopView(data=data)
+
+        message = await message.channel.send(embed=embed, view=options)
+        options.set_message(message)
 
     async def send_specify_message(self, channel, error_name: str, name: str = ""):
         words = self.__error_messages[error_name]
