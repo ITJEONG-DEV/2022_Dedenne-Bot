@@ -7,7 +7,8 @@ import discord
 from googleapiclient.discovery import build
 import urllib
 
-import youtube_dl
+import yt_dlp as youtube_dl
+# import youtube_dl
 
 from youtube.data.Video import Video
 
@@ -15,6 +16,11 @@ youtube_dl.utils.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+    }],
     'restrictfilenames': True,
     'noplaylist': True,
     'nocheckcertificate': True,
