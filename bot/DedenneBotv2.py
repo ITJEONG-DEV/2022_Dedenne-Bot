@@ -2,8 +2,8 @@ from bot.botWorker import *
 from data import *
 from util import parse_json
 
-from lostark import get_character_data, get_mari_shop
-from lostark import Profile, MariShop
+from lostark import get_character_data, get_mari_shop, get_gold_info
+from lostark import Profile, MariShop, GoldInfo
 
 import discord
 
@@ -25,7 +25,7 @@ class CharacterView(DefaultView):
     def __init__(self, data: Profile):
         super().__init__(data)
 
-    @discord.ui.button(label="기본 정보", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="기본 정보", style=discord.ButtonStyle.grey, emoji="ℹ")
     async def on_click_default_info(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -54,7 +54,7 @@ class CharacterView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="세트 효과 정보", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="세트 효과 정보", style=discord.ButtonStyle.grey, emoji="📄")
     async def on_click_set_effect(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -84,7 +84,7 @@ class CharacterView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="특성 정보", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="특성 정보", style=discord.ButtonStyle.grey, emoji="📊")
     async def on_click_ability_info(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -106,7 +106,7 @@ class CharacterView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="보석 정보", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="보석 정보", style=discord.ButtonStyle.grey, emoji="💎")
     async def on_click_jewel(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -127,7 +127,7 @@ class CharacterView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="보유 캐릭터", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="보유 캐릭터", style=discord.ButtonStyle.grey, emoji="👥")
     async def on_click_character_list(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -150,7 +150,7 @@ class CharacterView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="내실", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="내실", style=discord.ButtonStyle.grey, emoji="🌱")
     async def on_click_stability(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
@@ -177,10 +177,8 @@ class MariShopView(DefaultView):
     def __init__(self, data: MariShop):
         super().__init__(data)
 
-    @discord.ui.button(label="성장 추천", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="성장 추천", style=discord.ButtonStyle.grey, emoji="🔝")
     async def on_click_tab1(self, interaction: discord.Interaction, button: discord.ui.Button):
-        button.label = self.data.tab1_name
-
         embed = discord.Embed(
             title=self.data.title,
             url=self.data.url,
@@ -212,7 +210,7 @@ class MariShopView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="전투ㆍ생활 추천", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="전투ㆍ생활 추천", style=discord.ButtonStyle.grey, emoji="⚔")
     async def on_click_tab2(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.title,
@@ -241,6 +239,93 @@ class MariShopView(DefaultView):
             if m == "":
                 m = "이전 판매 상품이 없습니다"
             embed.add_field(name=self.data.tab2_pre_name[i], value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class GoldView(DefaultView):
+    def __init(self, data: GoldInfo):
+        super().__init__(data)
+
+    @discord.ui.button(label="골드 시세", style=discord.ButtonStyle.grey, emoji="📉")
+    async def on_click_gold(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="골드 시세",
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        embed.add_field(name="💎골드 팔 때💎", value=self.data.golds["sell"])
+        embed.add_field(name="💰골드 살 때💰", value=self.data.golds["buy"])
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="전각 시세 TOP 1-10", style=discord.ButtonStyle.grey, emoji="🥇")
+    async def on_click_engraveds_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="전설 각인서 시세",
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        engraveds = []
+        for i in range(0, 10):
+            engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
+
+        embed.add_field(name="전각 시세 TOP 1-10", value="\n".join(engraveds))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="전각 시세 TOP 11-30", style=discord.ButtonStyle.grey, emoji="🥈")
+    async def on_click_engraveds_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="전설 각인서 시세",
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        engraveds = []
+        for i in range(10, 30):
+            engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
+
+        embed.add_field(name="전각 시세 TOP 11-30", value="\n".join(engraveds))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="전각 시세 TOP 31-50", style=discord.ButtonStyle.grey, emoji="🥉")
+    async def on_click_engraveds_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="전설 각인서 시세",
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        engraveds = []
+        for i in range(30, 50):
+            engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
+
+        embed.add_field(name="전각 시세 TOP 31-50", value="\n".join(engraveds))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="전각 시세 TOP 51-", style=discord.ButtonStyle.grey, emoji="🎖")
+    async def on_click_engraveds_4(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="전설 각인서 시세",
+            url=self.data.url,
+            color=discord.Color.blue()
+        )
+
+        engraveds = []
+        for i in range(50, len(self.data.engraveds)):
+            engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
+
+        embed.add_field(name="전각 시세 TOP 51-", value="\n".join(engraveds))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -302,6 +387,9 @@ class DedenneBot(discord.Client):
 
                 elif content == "mari":
                     await self.show_mari_shop(message)
+
+                elif content == "gold":
+                    await self.show_gold_info(message)
 
     async def search_lostark(self, message):
         keyword = message.content.split()[-1]
@@ -373,6 +461,23 @@ class DedenneBot(discord.Client):
             embed.add_field(name=data.tab1_pre_name[i], value=m)
 
         options = MariShopView(data=data)
+
+        message = await message.channel.send(embed=embed, view=options)
+        options.set_message(message)
+
+    async def show_gold_info(self, message):
+        data = get_gold_info()
+
+        embed = discord.Embed(
+            title="골드 시세",
+            url=data.url,
+            color=discord.Color.blue()
+        )
+
+        embed.add_field(name="골드 팔 때", value=data.golds["sell"])
+        embed.add_field(name="골드 살 때", value=data.golds["buy"])
+
+        options = GoldView(data=data)
 
         message = await message.channel.send(embed=embed, view=options)
         options.set_message(message)

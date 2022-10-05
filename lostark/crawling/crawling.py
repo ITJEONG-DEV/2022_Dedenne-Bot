@@ -2,7 +2,7 @@ import urllib.parse
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-from lostark.data import Profile, MariShop
+from lostark.data import Profile, MariShop, GoldInfo
 
 
 def get_html_object(url="https://lostark.game.onstove.com/Profile/Character/허니퓨"):
@@ -32,12 +32,19 @@ def get_mari_shop(base_url="https://lostark.game.onstove.com/Shop"):
 
     return MariShop(bs_object, base_url)
 
+def get_gold_info(base_url="https://loatool.taeu.kr/"):
+    url_ticker = urllib.request.Request(base_url, headers={'User-Agent': 'Mozilla/5.0'})
+    read_ticker = urlopen(url_ticker).read().decode("utf-8")
+
+    bs_object = BeautifulSoup(read_ticker, "html.parser")
+
+    return GoldInfo(bs_object, base_url)
 
 if __name__ == "__main__":
     # bs_object = get_html_object_korean()
     # print(str(bs_object))
 
-    # data = get_character_data(character_name="데덴네귀여워")
+    data = get_character_data(character_name="데덴네귀여워")
 
-    data = get_mari_shop()
+    # data = get_gold_info()
     print(str(data))
