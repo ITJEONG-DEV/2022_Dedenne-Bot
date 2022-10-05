@@ -1,4 +1,4 @@
-from lostark.data.profile_ingame import *
+from lostark.data.profile.profile_ingame import *
 from lostark.util import *
 
 

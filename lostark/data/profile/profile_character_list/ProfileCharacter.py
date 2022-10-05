@@ -1,4 +1,4 @@
-from lostark.data.profile_character_list import Server
+from lostark.data.profile.profile_character_list import Server
 from lostark.util import *
 
 

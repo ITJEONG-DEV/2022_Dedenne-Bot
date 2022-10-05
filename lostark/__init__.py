@@ -1,2 +1,3 @@
-from .crawling import get_character_data
-from .data import *
+from .crawling import *
+
+from lostark.data import *

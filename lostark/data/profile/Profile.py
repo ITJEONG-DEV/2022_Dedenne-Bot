@@ -1,7 +1,7 @@
 import re
 
-from lostark.data.profile_character_list import ProfileCharacter
-from lostark.data.profile_ingame import ProfileIngame
+from lostark.data.profile.profile_character_list import ProfileCharacter
+from lostark.data.profile.profile_ingame import ProfileIngame
 from . import CharacterState, ProfileState, Info, ProfileStability
 from lostark.util import *
 

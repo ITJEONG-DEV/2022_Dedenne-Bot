@@ -66,8 +66,8 @@ class ProfileEquipment:
                 continue
 
             try:
-                item_data = slot["data-item"]
-                grade = slot["data-grade"]
+                item_data = slot["profile-item"]
+                grade = slot["profile-grade"]
 
                 img = get_bs_object(slot).img
                 src = img["src"]
@@ -117,13 +117,13 @@ class ProfileEquipment:
             if "profile" in class_name:
                 continue
 
-            grade = slot["data-grade"]
+            grade = slot["profile-grade"]
 
             if grade == "":
                 continue
 
             try:
-                item_data = slot["data-item"]
+                item_data = slot["profile-item"]
 
                 img = get_bs_object(slot).img
                 src = img["src"]
@@ -159,8 +159,8 @@ class ProfileEquipment:
                 spans = get_bs_object(span).findAll("span")
 
                 jewel = {
-                    "grade": span["data-grade"],
-                    "item_data": span["data-item"],
+                    "grade": span["profile-grade"],
+                    "item_data": span["profile-item"],
                     "id": span["id"]
                 }
 
@@ -190,8 +190,8 @@ class ProfileEquipment:
             img = get_bs_object(slot).img
 
             jewel = {
-                "id": slot["data-gemkey"],
-                "item_data": slot["data-item"],
+                "id": slot["profile-gemkey"],
+                "item_data": slot["profile-item"],
                 "src": img["src"],
             }
 
@@ -244,12 +244,12 @@ class ProfileEquipment:
         for i in range(len(card_list)):
             card_item = get_bs_object(card_list[i])
 
-            index = card_item.li["data-cardindex"]
+            index = card_item.li["profile-cardindex"]
 
             slot = get_bs_object(card_item.find("div", {"class": "card-slot"}))
 
-            grade = slot.div["data-grade"]
-            item_data = slot.div["data-item"]
+            grade = slot.div["profile-grade"]
+            item_data = slot.div["profile-item"]
 
             name = get_bs_object(slot.div).find("font").text
 
@@ -272,7 +272,7 @@ class ProfileEquipment:
         for i in range(len(effect_list)):
             effect_item = get_bs_object(effect_list[i]).li
 
-            index = effect_item["data-cardsetindex"]
+            index = effect_item["profile-cardsetindex"]
 
             title = get_bs_object(effect_item).find("div", {"class": "card-effect__title"}).text
             description = get_bs_object(effect_item).find("div", {"class": "card-effect__dsc"}).text
@@ -304,8 +304,8 @@ class ProfileEquipment:
         scripts = bs_object.findAll("script")
         target_script = None
         for script in scripts:
-            if "Profile = {" in script.text:
-                matched = re.search(r'Profile = (.*?);', script.text, re.S)
+            if "profile = {" in script.text:
+                matched = re.search(r'profile = (.*?);', script.text, re.S)
                 target_script = json.loads(matched.group(1))
 
         # profile-equipment-character

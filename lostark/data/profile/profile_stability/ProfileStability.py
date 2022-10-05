@@ -1,10 +1,9 @@
-import json
 import requests
 
 from . import ProfileCollection
 from lostark.util import *
-from lostark.data.profile_ingame import ProfileSkillLife
-from lostark.data import Info
+from lostark.data.profile.profile_ingame import ProfileSkillLife
+from lostark.data.profile import Info
 
 
 class ProfileStability:
