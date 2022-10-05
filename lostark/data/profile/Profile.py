@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from lostark.data.profile.profile_character_list import ProfileCharacter
@@ -8,6 +9,8 @@ from lostark.util import *
 
 class Profile:
     def __init__(self, bs_object: BeautifulSoup):
+        self.__time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         self.__lv = bs_object.body.find("span", {"class": "profile-character-info__lv"}).text.strip()
         self.__name = bs_object.body.find("span", {"class": "profile-character-info__name"}).text.strip()
         self.__server = bs_object.body.find("span", {"class": "profile-character-info__server"}).text.strip()[1:]
@@ -68,6 +71,10 @@ class Profile:
         return '{} {} {} {} {}\n\n{}\n{}\n{}\n{}\n' \
             .format(self.lv, self.name, self.server, self.emblem, self.state, self.profile_character_list,
                     self.profile_ingame, self.profile_state, self.profile_stability)
+
+    @property
+    def time(self):
+        return self.__time
 
     @property
     def lv(self):

@@ -1,3 +1,5 @@
+import datetime
+
 from lostark.util import *
 
 
@@ -19,6 +21,7 @@ class MariShop:
         self.__tab1_pre_name = []
         self.__tab2_pre_name = []
 
+        self.__time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.__parse(bs_object)
 
     def __str__(self):
@@ -123,6 +126,10 @@ class MariShop:
                 amount = item_object.find("span", {"class": "amount"}).text
 
                 self.__tab2_pre.append([item_name, amount])
+
+    @property
+    def time(self):
+        return self.__time
 
     @property
     def title(self):

@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from lostark.util import *
@@ -26,6 +27,8 @@ class GoldInfo:
 
         self.__engraveds = []
         self.__golds = {}
+
+        self.__time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         scripts = bs_object.findAll("script")
         for script in scripts:
@@ -88,6 +91,10 @@ class GoldInfo:
         index = ord(content) - ord('a')
 
         return params[index]
+
+    @property
+    def time(self):
+        return self.__time
 
     @property
     def url(self):

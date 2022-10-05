@@ -34,7 +34,7 @@ class CharacterView(DefaultView):
         )
 
         embed.set_image(url=self.data.profile_ingame.profile_equipment.src)
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.name + "\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
 
         embed.add_field(name="원정대 레벨", value=self.data.profile_ingame.profile_info.expedition_lv)
         embed.add_field(name="아이템 레벨", value=self.data.profile_ingame.profile_info.equip_item_lv)
@@ -62,7 +62,7 @@ class CharacterView(DefaultView):
             color=discord.Color.blue()
         )
 
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.name + "\t\t\t\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
 
         m = ""
@@ -92,9 +92,8 @@ class CharacterView(DefaultView):
             color=discord.Color.blue()
         )
 
-        # embed.set_image(url=self.profile.profile_ingame.profile_equipment.src)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.name + "\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
 
         m = f"치명 {self.data.state.fatal}\n특화 {self.data.state.specialization}\n제압 {self.data.state.overpowering}\n신속 {self.data.state.swiftness}\n인내 {self.data.state.patience}\n숙련 {self.data.state.skilled}"
         embed.add_field(name="전투 특성", value=m)
@@ -115,7 +114,7 @@ class CharacterView(DefaultView):
         )
 
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.name + "\t\t\t\t\t\t\t\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
 
         m = ""
         for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
@@ -135,6 +134,7 @@ class CharacterView(DefaultView):
             color=discord.Color.blue()
         )
 
+        embed.set_footer(text=self.data.name + "\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
 
         character_list = self.data.profile_character_list.character_list
@@ -159,7 +159,7 @@ class CharacterView(DefaultView):
         )
 
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
-        embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.name + "\t\t\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
 
         stability = self.data.profile_stability
 
@@ -185,8 +185,8 @@ class MariShopView(DefaultView):
             color=discord.Color.blue()
         )
 
-        # embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
         # embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.time + " 기준")
 
         m = ""
         for i in range(len(self.data.tab1)):
@@ -218,8 +218,7 @@ class MariShopView(DefaultView):
             color=discord.Color.blue()
         )
 
-        # embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
-        # embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.time + " 기준")
 
         m = ""
         for i in range(len(self.data.tab2)):
@@ -256,6 +255,8 @@ class GoldView(DefaultView):
             color=discord.Color.blue()
         )
 
+        embed.set_footer(text=self.data.time + " 기준")
+
         embed.add_field(name="💎골드 팔 때💎", value=self.data.golds["sell"])
         embed.add_field(name="💰골드 살 때💰", value=self.data.golds["buy"])
 
@@ -269,6 +270,8 @@ class GoldView(DefaultView):
             url=self.data.url,
             color=discord.Color.blue()
         )
+
+        embed.set_footer(text=self.data.time + " 기준")
 
         engraveds = []
         for i in range(0, 10):
@@ -287,6 +290,8 @@ class GoldView(DefaultView):
             color=discord.Color.blue()
         )
 
+        embed.set_footer(text=self.data.time + " 기준")
+
         engraveds = []
         for i in range(10, 30):
             engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
@@ -304,6 +309,8 @@ class GoldView(DefaultView):
             color=discord.Color.blue()
         )
 
+        embed.set_footer(text=self.data.time + " 기준")
+
         engraveds = []
         for i in range(30, 50):
             engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
@@ -320,6 +327,8 @@ class GoldView(DefaultView):
             url=self.data.url,
             color=discord.Color.blue()
         )
+
+        embed.set_footer(text=self.data.time + " 기준")
 
         engraveds = []
         for i in range(50, len(self.data.engraveds)):
@@ -407,7 +416,7 @@ class DedenneBot(discord.Client):
             )
 
             embed.set_image(url=data.profile_ingame.profile_equipment.src)
-            embed.set_footer(text=data.name, icon_url=data.emblem)
+            embed.set_footer(text=data.name + "\t\t\t" + data.time + " 기준", icon_url=data.emblem)
 
             embed.add_field(name="원정대 레벨", value=data.profile_ingame.profile_info.expedition_lv)
             embed.add_field(name="아이템 레벨", value=data.profile_ingame.profile_info.equip_item_lv)
@@ -438,8 +447,7 @@ class DedenneBot(discord.Client):
             color=discord.Color.blue()
         )
 
-        # embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
-        # embed.set_footer(text=self.data.name, icon_url=self.data.emblem)
+        embed.set_footer(text=data.time + " 기준")
 
         m = ""
         for i in range(len(data.tab1)):
@@ -473,6 +481,8 @@ class DedenneBot(discord.Client):
             url=data.url,
             color=discord.Color.blue()
         )
+
+        embed.set_footer(text=data.time + " 기준")
 
         embed.add_field(name="골드 팔 때", value=data.golds["sell"])
         embed.add_field(name="골드 살 때", value=data.golds["buy"])
