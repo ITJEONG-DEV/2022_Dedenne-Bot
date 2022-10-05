@@ -16,6 +16,9 @@ class MariShop:
         self.__tab1_pre = []
         self.__tab2_pre = []
 
+        self.__tab1_pre_name = []
+        self.__tab2_pre_name = []
+
         self.__parse(bs_object)
 
     def __str__(self):
@@ -25,26 +28,32 @@ class MariShop:
             item = self.tab1[i]
             s += f"  {i + 1}. {item[0]} 크리스탈 {item[1]}\n"
 
-        s += "이전 판매 상품\n"
-        if len(self.tab1_pre) > 0:
-            for i in range(len(self.tab1_pre)):
-                item = self.tab1_pre[i]
-                s += f"  {i + 1}. {item[0]} 크리스탈 {item[1]}\n"
-        else:
+        if len(self.tab1_pre_name) == 0:
             s += "  이전 판매 상품이 없습니다\n"
+        else:
+            s += "이전 판매 상품\n"
+            for i in range(len(self.tab1_pre_name)):
+                s += f"{self.tab1_pre_name[i]}\n"
+
+                for j in range(6):
+                    item = self.tab1_pre[i * 6 + j]
+                    s += f"  {j + 1}. {item[0]} 크리스탈 {item[1]}\n"
 
         s += f"\n{self.tab2_name}\n"
         for i in range(len(self.tab2)):
             item = self.tab2[i]
             s += f"  {i + 1}. {item[0]} 크리스탈 {item[1]}\n"
 
-        s += "이전 판매 상품\n"
-        if len(self.tab2_pre) > 0:
-            for i in range(len(self.tab2_pre)):
-                item = self.tab2_pre[i]
-                s += f"  {i + 1}. {item[0]} 크리스탈 {item[1]}\n"
-        else:
+        if len(self.tab2_pre_name) == 0:
             s += "  이전 판매 상품이 없습니다\n"
+        else:
+            s += "이전 판매 상품\n"
+            for i in range(len(self.tab2_pre_name)):
+                s += f"{self.tab2_pre_name[i]}\n"
+
+                for j in range(6):
+                    item = self.tab2_pre[i * 6 + j]
+                    s += f"  {j + 1}. {item[0]} 크리스탈 {item[1]}\n"
 
         return s
 
@@ -72,7 +81,9 @@ class MariShop:
             self.__tab1.append([item_name, amount])
 
         # pre
-        pre_text = get_bs_object(lui_tab1_1).find("p", {"class": "is-active"})
+        pre_text = get_bs_object(lui_tab1_1).find("p", {"class": "is-active"}).text.strip()
+        pre_text = " ".join(pre_text.split())
+        self.__tab1_pre_name.append(pre_text)
         pre = get_bs_object(lui_tab1_1).find("div", "swiper-container")
         if pre is not None:
             item_list = get_bs_object(pre).findAll("div", {"class": "wrapper"})
@@ -99,7 +110,9 @@ class MariShop:
             self.__tab2.append([item_name, amount])
 
         # pre
-        pre_text = get_bs_object(lui_tab1_2).find("p", {"class": "is-active"})
+        pre_text = get_bs_object(lui_tab1_2).find("p", {"class": "is-active"}).text.strip()
+        pre_text = " ".join(pre_text.split())
+        self.__tab2_pre_name.append(pre_text)
         pre = get_bs_object(lui_tab1_2).find("div", "swiper-container")
         if pre is not None:
             item_list = get_bs_object(pre).findAll("div", {"class": "wrapper"})
@@ -124,8 +137,16 @@ class MariShop:
         return self.__tab1_name
 
     @property
+    def tab1_pre_name(self):
+        return self.__tab1_pre_name
+
+    @property
     def tab2_name(self):
         return self.__tab2_name
+
+    @property
+    def tab2_pre_name(self):
+        return self.__tab2_pre_name
 
     @property
     def tab1(self):

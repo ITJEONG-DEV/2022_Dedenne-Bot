@@ -176,6 +176,7 @@ class CharacterView(DefaultView):
 class MariShopView(DefaultView):
     def __init__(self, data: MariShop):
         super().__init__(data)
+
     @discord.ui.button(label="성장 추천", style=discord.ButtonStyle.grey)
     async def on_click_tab1(self, interaction: discord.Interaction, button: discord.ui.Button):
         button.label = self.data.tab1_name
@@ -197,23 +198,22 @@ class MariShopView(DefaultView):
             m = "현재 판매 상품이 없습니다"
         embed.add_field(name="현재 판매 상품", value=m)
 
-        m = ""
-        for i in range(len(self.data.tab1_pre)):
-            item = self.data.tab1_pre[i]
-            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
-        if m == "":
-            m = "이전 판매 상품이 없습니다"
-        embed.add_field(name="이전 판매 상품", value=m)
+        pre_num = int(len(self.data.tab1_pre) / 6)
+
+        for i in range(pre_num):
+            m = ""
+            for j in range(6):
+                item = self.data.tab1_pre[i * 6 + j]
+                m += f"{j + 1}. {item[0]} 크리스탈 {item[1]}\n"
+            if m == "":
+                m = "이전 판매 상품이 없습니다"
+            embed.add_field(name=self.data.tab1_pre_name[i], value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
     @discord.ui.button(label="전투ㆍ생활 추천", style=discord.ButtonStyle.grey)
     async def on_click_tab2(self, interaction: discord.Interaction, button: discord.ui.Button):
-        print("tab2 button label:" + button.label)
-        button.label = self.data.tab2_name
-        print("tab2 button label:" + button.label)
-
         embed = discord.Embed(
             title=self.data.title,
             url=self.data.url,
@@ -231,16 +231,20 @@ class MariShopView(DefaultView):
             m = "현재 판매 상품이 없습니다"
         embed.add_field(name="현재 판매 상품", value=m)
 
-        m = ""
-        for i in range(len(self.data.tab2_pre)):
-            item = self.data.tab2_pre[i]
-            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
-        if m == "":
-            m = "이전 판매 상품이 없습니다"
-        embed.add_field(name="이전 판매 상품", value=m)
+        pre_num = int(len(self.data.tab2_pre) / 6)
+
+        for i in range(pre_num):
+            m = ""
+            for j in range(6):
+                item = self.data.tab2_pre[i * 6 + j]
+                m += f"{j + 1}. {item[0]} 크리스탈 {item[1]}\n"
+            if m == "":
+                m = "이전 판매 상품이 없습니다"
+            embed.add_field(name=self.data.tab2_pre_name[i], value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
+
 
 class DedenneBot(discord.Client):
     async def on_ready(self):
@@ -357,13 +361,16 @@ class DedenneBot(discord.Client):
             m = "현재 판매 상품이 없습니다"
         embed.add_field(name="현재 판매 상품", value=m)
 
-        m = ""
-        for i in range(len(data.tab1_pre)):
-            item = data.tab1_pre[i]
-            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
-        if m == "":
-            m = "이전 판매 상품이 없습니다"
-        embed.add_field(name="이전 판매 상품", value=m)
+        pre_num = int(len(data.tab1_pre) / 6)
+
+        for i in range(pre_num):
+            m = ""
+            for j in range(6):
+                item = data.tab1_pre[i * 6 + j]
+                m += f"{j + 1}. {item[0]} 크리스탈 {item[1]}\n"
+            if m == "":
+                m = "이전 판매 상품이 없습니다"
+            embed.add_field(name=data.tab1_pre_name[i], value=m)
 
         options = MariShopView(data=data)
 
