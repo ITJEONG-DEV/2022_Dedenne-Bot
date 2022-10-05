@@ -100,8 +100,8 @@ class ProfileEquipment:
 
                     # print(item)
 
-            except Exception as e:
-                print("Error: " + str(e))
+            except Exception:
+                continue
 
     def __parse_profile_avatar_slot__(self, bs_object: BeautifulSoup):
         profile_avatar_slot = bs_object.find("div", {"class": "profile-avatar__slot"})
