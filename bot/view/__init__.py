@@ -1,1 +1,1 @@
-from .View import CharacterView, MariShopView, GoldView
+from .View import *
