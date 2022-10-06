@@ -14,7 +14,7 @@ class ProfileStability:
         life_skill_list = get_bs_object(ul).findAll("li")
 
         for li in life_skill_list:
-            life_skill = " L".join(li.text.split("L"))
+            life_skill = " `L".join(li.text.split("L")) + "`"
             self.__profile_skill_life.add(life_skill)
 
         # get collection

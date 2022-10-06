@@ -58,9 +58,9 @@ class ProfileCollection:
         self.__memory = p
 
     def __str__(self):
-        return f"거인의심장: {self.heart}\n" + f"섬의 마음: {self.island}\n" + f"모코코 씨앗: {self.seed}\n" \
-               + f"위대한 미술품: {self.art}\n" + f"항해 모험물: {self.voyage}\n" + f"세계수의 잎: {self.tree}\n" \
-               + f"이그네아의 징표: {self.medal}\n" + f"오르페우스의 별: {self.star}\n" + f"기억의 오르골: {self.memory}\n"
+        return f"거인의심장 `{self.heart}`\n" + f"섬의 마음 `{self.island}`\n" + f"모코코 씨앗 `{self.seed}`\n" \
+               + f"위대한 미술품 `{self.art}`\n" + f"항해 모험물 `{self.voyage}`\n" + f"세계수의 잎 `{self.tree}`\n" \
+               + f"이그네아의 징표 `{self.medal}`\n" + f"오르페우스의 별 `{self.star}`\n" + f"기억의 오르골 `{self.memory}`\n"
 
     @property
     def heart(self):

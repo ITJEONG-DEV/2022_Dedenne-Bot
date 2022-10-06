@@ -10,7 +10,7 @@ class Engraved:
         self.__price = price
 
     def __str__(self):
-        return f"{self.name} {self.price} 골드"
+        return f"{self.name}```fix\n{self.price} 골드\n```"
 
     @property
     def name(self):

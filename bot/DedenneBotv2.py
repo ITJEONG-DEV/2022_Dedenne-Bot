@@ -84,19 +84,24 @@ class DedenneBot(discord.Client):
             embed.set_image(url=data.profile_ingame.profile_equipment.src)
             embed.set_footer(text=data.name + "\t\t\t" + data.time + " 기준", icon_url=data.emblem)
 
-            embed.add_field(name="원정대 레벨", value=data.profile_ingame.profile_info.expedition_lv)
-            embed.add_field(name="아이템 레벨", value=data.profile_ingame.profile_info.equip_item_lv)
+            embed.add_field(name="원정대 레벨", value=f"`{data.profile_ingame.profile_info.expedition_lv}`")
+            embed.add_field(name="아이템 레벨", value=f"`{data.profile_ingame.profile_info.equip_item_lv}`")
             embed.add_field(name="영지",
-                            value=f"**{data.profile_ingame.profile_info.estate_name}  {data.profile_ingame.profile_info.estate_lv}**")
+                            value=f"`{data.profile_ingame.profile_info.estate_name} {data.profile_ingame.profile_info.estate_lv}`")
 
-            m = ""
+            m = "```diff\n"
             for slot in data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
-                m += str(slot) + "\n"
-            if m == "":
+                if "감소" in str(slot):
+                    m += "-" + str(slot) + "\n"
+                else:
+                    m += "+" + str(slot) + "\n"
+            if m == "```diff\n":
                 m = "-"
+            else:
+                m += "```"
             embed.add_field(name="각인 효과", value=m)
 
-            m = f"공격력 {data.state.attack}\n최대 생명력 {data.state.hp}"
+            m = f" 공격력 `{data.state.attack}`\n최대 생명력 `{data.state.hp}`"
             embed.add_field(name="기본 특성", value=m)
 
             options = CharacterView(data=data)
@@ -118,7 +123,7 @@ class DedenneBot(discord.Client):
         m = ""
         for i in range(len(data.tab1)):
             item = data.tab1[i]
-            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+            m += f"```diff\n+{item[0]}\n-크리스탈 {item[1]}\n```"
         if m == "":
             m = "현재 판매 상품이 없습니다"
         embed.add_field(name="현재 판매 상품", value=m)
@@ -129,7 +134,7 @@ class DedenneBot(discord.Client):
             m = ""
             for j in range(6):
                 item = data.tab1_pre[i * 6 + j]
-                m += f"{j + 1}. {item[0]} 크리스탈 {item[1]}\n"
+                m += f"```diff\n+{item[0]}\n-크리스탈 {item[1]}\n```"
             if m == "":
                 m = "이전 판매 상품이 없습니다"
             embed.add_field(name=data.tab1_pre_name[i], value=m)
@@ -150,8 +155,8 @@ class DedenneBot(discord.Client):
 
         embed.set_footer(text=data.time + " 기준")
 
-        embed.add_field(name="골드 팔 때", value=data.golds["sell"])
-        embed.add_field(name="골드 살 때", value=data.golds["buy"])
+        embed.add_field(name="💎골드 팔 때", value=f"```yaml\n{data.golds['sell']}\n```")
+        embed.add_field(name="💰골드 살 때", value=f"```fix\n{data.golds['buy']}\n```")
 
         options = GoldView(data=data)
 

@@ -29,19 +29,24 @@ class CharacterView(DefaultView):
         embed.set_image(url=self.data.profile_ingame.profile_equipment.src)
         embed.set_footer(text=self.data.name + "\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
 
-        embed.add_field(name="원정대 레벨", value=self.data.profile_ingame.profile_info.expedition_lv)
-        embed.add_field(name="아이템 레벨", value=self.data.profile_ingame.profile_info.equip_item_lv)
+        embed.add_field(name="원정대 레벨", value=f"`{self.data.profile_ingame.profile_info.expedition_lv}`")
+        embed.add_field(name="아이템 레벨", value=f"`{self.data.profile_ingame.profile_info.equip_item_lv}`")
         embed.add_field(name="영지",
-                        value=f"**{self.data.profile_ingame.profile_info.estate_name}  {self.data.profile_ingame.profile_info.estate_lv}**")
+                        value=f"`{self.data.profile_ingame.profile_info.estate_name} {self.data.profile_ingame.profile_info.estate_lv}`")
 
-        m = ""
+        m = "```diff\n"
         for slot in self.data.profile_ingame.profile_equipment.ability_engrave_slot.ability:
-            m += str(slot) + "\n"
-        if m == "":
+            if "감소" in str(slot):
+                m += "-" + str(slot) + "\n"
+            else:
+                m += "+" + str(slot) + "\n"
+        if m == "```diff\n":
             m = "-"
+        else:
+            m += "```"
         embed.add_field(name="각인 효과", value=m)
 
-        m = f"공격력 {self.data.state.attack}\n최대 생명력 {self.data.state.hp}"
+        m = f"공격력 `{self.data.state.attack}\n`최대 생명력 `{self.data.state.hp}`\n"
         embed.add_field(name="기본 특성", value=m)
 
         await self.message.edit(embed=embed)
@@ -58,20 +63,24 @@ class CharacterView(DefaultView):
         embed.set_footer(text=self.data.name + "\t\t\t\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
 
-        m = ""
+        m = "```"
         for effect in self.data.profile_ingame.profile_equipment.card_slot.effect:
             m += f"{effect.title}\n"
-        if m == "":
+        if m == "```":
             m = "-"
+        else:
+            m += "```"
         embed.add_field(name="카드 세트 효과", value=m)
 
-        m = ""
+        m = "```"
         effect_list = list(self.data.profile_ingame.profile_equipment.equipment_effect_slot)
         effect_list.sort()
         for effect in effect_list:
             m += " ".join(effect.split("\t")[:-1]) + "\n"
-        if m == "":
+        if m == "```":
             m = "-"
+        else:
+            m += "```"
         embed.add_field(name="장비 세트 효과", value=m)
 
         await self.message.edit(embed=embed)
@@ -88,11 +97,11 @@ class CharacterView(DefaultView):
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
         embed.set_footer(text=self.data.name + "\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
 
-        m = f"치명 {self.data.state.fatal}\n특화 {self.data.state.specialization}\n제압 {self.data.state.overpowering}\n신속 {self.data.state.swiftness}\n인내 {self.data.state.patience}\n숙련 {self.data.state.skilled}"
+        m = f"\n치명 `{self.data.state.fatal}`\n특화 `{self.data.state.specialization}`\n제압 `{self.data.state.overpowering}`\n신속 `{self.data.state.swiftness}`\n인내 `{self.data.state.patience}`\n숙련 `{self.data.state.skilled}`"
         embed.add_field(name="전투 특성", value=m)
 
         state = self.data.profile_state
-        m = f"지성 {state.intellect}\n담력 {state.courage}\n매력 {state.charm}\n친절 {state.kindness}\n"
+        m = f"\n지성 `{state.intellect}`\n담력 `{state.courage}`\n매력 `{state.charm}`\n친절 `{state.kindness}`"
         embed.add_field(name="성향", value=m)
 
         await self.message.edit(embed=embed)
@@ -110,11 +119,13 @@ class CharacterView(DefaultView):
         embed.set_footer(text=self.data.name + "\t\t\t\t\t\t\t\t\t\t" + self.data.time + " 기준",
                          icon_url=self.data.emblem)
 
-        m = ""
+        m = "```md\n"
         for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
-            m += f"{jewel.name} {jewel.skill_name} {jewel.effect}\n"
-        if m == "":
+            m += f"[{' '.join(jewel.name.split(' ')[:-1])[:-1]}] {jewel.skill_name} {jewel.effect}\n"
+        if m == "```md\n":
             m = "-"
+        else:
+            m += "```"
         embed.add_field(name="보석 정보", value=m)
 
         await self.message.edit(embed=embed)
@@ -128,16 +139,16 @@ class CharacterView(DefaultView):
             color=discord.Color.blue()
         )
 
-        embed.set_footer(text=self.data.name + "\t\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
+        embed.set_footer(text=self.data.name + "\t\t" + self.data.time + " 기준", icon_url=self.data.emblem)
         embed.set_thumbnail(url=self.data.profile_ingame.profile_equipment.src)
 
         character_list = self.data.profile_character_list.character_list
         msg = "\n"
         for server in character_list:
-            msg += "**" + server.server + "**\n"
+            msg += "**" + server.server + "**\n```"
             for character in server.characters:
                 msg += character.name + " " + character.lv + " " + character.job + "\n"
-            msg += "\n"
+            msg += "```\n"
 
         embed.add_field(name="보유 캐릭터 목록", value=msg)
 
@@ -185,7 +196,7 @@ class MariShopView(DefaultView):
         m = ""
         for i in range(len(self.data.tab1)):
             item = self.data.tab1[i]
-            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+            m += f"```diff\n+{item[0]}\n-크리스탈 {item[1]}\n```"
         if m == "":
             m = "현재 판매 상품이 없습니다"
         embed.add_field(name="현재 판매 상품", value=m)
@@ -196,7 +207,7 @@ class MariShopView(DefaultView):
             m = ""
             for j in range(6):
                 item = self.data.tab1_pre[i * 6 + j]
-                m += f"{j + 1}. {item[0]} 크리스탈 {item[1]}\n"
+                m += f"```diff\n+{item[0]}\n-크리스탈 {item[1]}\n```"
             if m == "":
                 m = "이전 판매 상품이 없습니다"
             embed.add_field(name=self.data.tab1_pre_name[i], value=m)
@@ -217,7 +228,7 @@ class MariShopView(DefaultView):
         m = ""
         for i in range(len(self.data.tab2)):
             item = self.data.tab2[i]
-            m += f"{i + 1}. {item[0]} 크리스탈 {item[1]}\n"
+            m += f"```diff\n+{item[0]}\n-크리스탈 {item[1]}\n```"
         if m == "":
             m = "현재 판매 상품이 없습니다"
         embed.add_field(name="현재 판매 상품", value=m)
@@ -228,7 +239,7 @@ class MariShopView(DefaultView):
             m = ""
             for j in range(6):
                 item = self.data.tab2_pre[i * 6 + j]
-                m += f"{j + 1}. {item[0]} 크리스탈 {item[1]}\n"
+                m += f"```diff\n+{item[0]}\n-크리스탈 {item[1]}\n```"
             if m == "":
                 m = "이전 판매 상품이 없습니다"
             embed.add_field(name=self.data.tab2_pre_name[i], value=m)
@@ -251,13 +262,13 @@ class GoldView(DefaultView):
 
         embed.set_footer(text=self.data.time + " 기준")
 
-        embed.add_field(name="💎골드 팔 때💎", value=self.data.golds["sell"])
-        embed.add_field(name="💰골드 살 때💰", value=self.data.golds["buy"])
+        embed.add_field(name="💎골드 팔 때", value=f"```yaml\n{self.data.golds['sell']}\n```")
+        embed.add_field(name="💰골드 살 때", value=f"```fix\n{self.data.golds['buy']}\n```")
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="전각 시세 TOP 1-10", style=discord.ButtonStyle.grey, emoji="🥇")
+    @discord.ui.button(label="전각 시세 TOP 1-15", style=discord.ButtonStyle.grey, emoji="🥇")
     async def on_click_engraveds_1(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="전설 각인서 시세",
@@ -268,15 +279,15 @@ class GoldView(DefaultView):
         embed.set_footer(text=self.data.time + " 기준")
 
         engraveds = []
-        for i in range(0, 10):
+        for i in range(0, 15):
             engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
 
-        embed.add_field(name="전각 시세 TOP 1-10", value="\n".join(engraveds))
+        embed.add_field(name="전각 시세 TOP 1-15", value="\n".join(engraveds))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="전각 시세 TOP 11-30", style=discord.ButtonStyle.grey, emoji="🥈")
+    @discord.ui.button(label="전각 시세 TOP 16-40", style=discord.ButtonStyle.grey, emoji="🥈")
     async def on_click_engraveds_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="전설 각인서 시세",
@@ -287,15 +298,15 @@ class GoldView(DefaultView):
         embed.set_footer(text=self.data.time + " 기준")
 
         engraveds = []
-        for i in range(10, 30):
+        for i in range(16, 40):
             engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
 
-        embed.add_field(name="전각 시세 TOP 11-30", value="\n".join(engraveds))
+        embed.add_field(name="전각 시세 TOP 16-40", value="\n".join(engraveds))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="전각 시세 TOP 31-50", style=discord.ButtonStyle.grey, emoji="🥉")
+    @discord.ui.button(label="전각 시세 TOP 41-65", style=discord.ButtonStyle.grey, emoji="🥉")
     async def on_click_engraveds_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="전설 각인서 시세",
@@ -306,15 +317,15 @@ class GoldView(DefaultView):
         embed.set_footer(text=self.data.time + " 기준")
 
         engraveds = []
-        for i in range(30, 50):
+        for i in range(41, 65):
             engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
 
-        embed.add_field(name="전각 시세 TOP 31-50", value="\n".join(engraveds))
+        embed.add_field(name="전각 시세 TOP 41-65", value="\n".join(engraveds))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="전각 시세 TOP 51-", style=discord.ButtonStyle.grey, emoji="🎖")
+    @discord.ui.button(label="전각 시세 TOP 65-", style=discord.ButtonStyle.grey, emoji="🎖")
     async def on_click_engraveds_4(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="전설 각인서 시세",
@@ -325,7 +336,7 @@ class GoldView(DefaultView):
         embed.set_footer(text=self.data.time + " 기준")
 
         engraveds = []
-        for i in range(50, len(self.data.engraveds)):
+        for i in range(65, len(self.data.engraveds)):
             engraveds.append("%02d. " % (i + 1) + str(self.data.engraveds[i]))
 
         embed.add_field(name="전각 시세 TOP 51-", value="\n".join(engraveds))
