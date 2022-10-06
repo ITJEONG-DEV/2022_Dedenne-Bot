@@ -84,9 +84,15 @@ class MariShop:
             self.__tab1.append([item_name, amount])
 
         # pre
-        pre_text = get_bs_object(lui_tab1_1).find("p", {"class": "is-active"}).text.strip()
-        pre_text = " ".join(pre_text.split())
-        self.__tab1_pre_name.append(pre_text)
+        pre = get_bs_object(lui_tab1_1).find("div", {"class": "past-title"})
+
+        pre_text_list = get_bs_object(pre).findAll("p")
+        for pre_text in pre_text_list:
+            text = pre_text.text.strip()
+            text = " ".join(text.split())
+
+            self.__tab1_pre_name.append(text)
+
         pre = get_bs_object(lui_tab1_1).find("div", "swiper-container")
         if pre is not None:
             item_list = get_bs_object(pre).findAll("div", {"class": "wrapper"})
@@ -113,9 +119,15 @@ class MariShop:
             self.__tab2.append([item_name, amount])
 
         # pre
-        pre_text = get_bs_object(lui_tab1_2).find("p", {"class": "is-active"}).text.strip()
-        pre_text = " ".join(pre_text.split())
-        self.__tab2_pre_name.append(pre_text)
+        pre = get_bs_object(lui_tab1_2).find("div", {"class": "past-title"})
+
+        pre_text_list = get_bs_object(pre).findAll("p")
+        for pre_text in pre_text_list:
+            text = pre_text.text.strip()
+            text = " ".join(text.split())
+
+            self.__tab2_pre_name.append(text)
+
         pre = get_bs_object(lui_tab1_2).find("div", "swiper-container")
         if pre is not None:
             item_list = get_bs_object(pre).findAll("div", {"class": "wrapper"})

@@ -1,3 +1,5 @@
+import datetime
+
 from bot.botWorker import *
 from data import *
 from util import parse_json
@@ -7,8 +9,7 @@ from bot.view import *
 
 import discord
 
-ready = False
-
+KOREA = datetime.timezone(datetime.timedelta(hours=9))
 
 class DedenneBot(discord.Client):
     async def on_ready(self):
@@ -19,15 +20,10 @@ class DedenneBot(discord.Client):
         # bot worker
         self.__worker = BotWorker(self)
 
-        global ready
-        ready = True
-
         print('Logged on as', self.user)
 
     async def on_message(self, message):
-        global ready
-        if not ready:
-            return
+        await self.wait_until_ready()
 
         # '봇' 또는 'bot' 이 포함된 채널에만 반응
         if "봇" not in message.channel.name and "bot" not in message.channel.name:
