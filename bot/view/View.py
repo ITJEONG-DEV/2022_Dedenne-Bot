@@ -119,9 +119,14 @@ class CharacterView(DefaultView):
         embed.set_footer(text=self.data.name + "\t\t\t\t\t\t\t\t\t\t" + self.data.time + " 기준",
                          icon_url=self.data.emblem)
 
-        m = "```md\n"
+        m = "```ini\n"
         for jewel in self.data.profile_ingame.profile_equipment.jewel_slot:
-            m += f"[{' '.join(jewel.name.split(' ')[:-1])[:-1]}] {jewel.skill_name} {jewel.effect}\n"
+            effect = jewel.effect.replace("재사용 대기시간 ", "[쿨타임 -")
+            effect = effect.replace(" 감소", "")
+            effect = effect.replace("피해 ", "[피해 +")
+            effect = effect.replace(" 증가", "")
+            effect = effect.replace(".00", "")
+            m += f"[{' '.join(jewel.name.split(' ')[:-1])[:-1]}] {jewel.skill_name} {effect}]\n"
         if m == "```md\n":
             m = "-"
         else:
