@@ -745,18 +745,16 @@ class AbrelshudView(DefaultView):
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
         m = "**1페이즈**\n"
-        m += "1파티```fix\n회오리 수류탄\n파괴 폭탄\n```\n"
-        m += "2파티```fix\n회오리 수류탄\n파괴 폭탄\n상태이상 관련 배틀 아이템```\n\n"
+        m += "<1파티>```fix\n회오리 수류탄\n파괴 폭탄\n```\n"
+        m += "<2파티>```fix\n회오리 수류탄\n파괴 폭탄\n상태이상 관련 배틀 아이템```\n"
         m += "**2페이즈**\n"
-        m += "내부```fix\n점토 수류탄\n수면 폭탄\n시간 정지 물약\n```\n"
-        m += "외부```fix\n회오리 수류탄\n```\n"
-        embed.add_field(name="배틀 아이템(1-2)", value=m)
-
-        m = "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n\n"
-        m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n\n"
-        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n\n"
-        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n\n"
-        embed.add_field(name="배틀 아이템(3-6)", value=m)
+        m += "<내부>```fix\n점토 수류탄\n수면 폭탄\n시간 정지 물약\n```\n"
+        m += "<외부>```fix\n회오리 수류탄\n```\n"
+        m += "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n"
+        m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n"
+        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n"
+        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n"
+        embed.add_field(name="배틀 아이템", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -791,11 +789,11 @@ class KayangelView(DefaultView):
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
         m = "**천공의 문 넬라시아**\n\n"
-        m += "천공의 파수꾼```fix\n회오리 or 암흑 수류탄\n신속 로브```\n"
-        m += "티엔```fix\n신속 로브```\n\n"
+        m += "<천공의 파수꾼>```fix\n회오리 or 암흑 수류탄\n신속 로브```\n"
+        m += "<티엔>```fix\n신속 로브```\n\n"
         m += "**영원한 빛의 요람**\n\n"
-        m += "프리우나```fix\n만능 물약\n성스러운 부적\n정화룬 or 정화 스킬```\n"
-        m += "라우리엘```fix\n시간 정지 물약\n화염 or 암흑 수류탄```\n"
+        m += "<프리우나>```fix\n만능 물약\n성스러운 부적```\n"
+        m += "<라우리엘>```fix\n시간 정지 물약\n화염 or 암흑 수류탄```\n"
 
         embed.add_field(name="배틀 아이템", value=m)
 

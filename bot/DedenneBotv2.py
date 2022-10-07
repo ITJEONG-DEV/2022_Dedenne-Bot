@@ -83,11 +83,16 @@ class DedenneBot(discord.Client):
                 elif content == "gold":
                     await self.show_gold_info(message)
 
+                elif content == "search-engraved":
+                    await self.show_search_engraved_info(message)
+
                 elif content == "engraved":
                     await self.show_engraved_info(message)
 
                 elif content == "occupation-war":
                     await self.show_occupation_war_info(message)
+
+                # 레이드 공략
 
                 elif content == "argos-solution":
                     await self.show_argos_solution(message)
@@ -109,6 +114,8 @@ class DedenneBot(discord.Client):
 
                 elif content == "illiakan-solution":
                     await self.show_illiakan_solution(message)
+
+                # 레이드 보상
 
                 elif content == "raid":
                     await self.show_raid_info(message)
@@ -214,6 +221,25 @@ class DedenneBot(discord.Client):
 
         embed = discord.Embed(
             title="골드 시세",
+            url=data.url,
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text=data.time + " 기준", icon_url=self.icon_url)
+
+        embed.add_field(name="💎골드 팔 때", value=f"```yaml\n{data.golds['sell']}\n```")
+        embed.add_field(name="💰골드 살 때", value=f"```fix\n{data.golds['buy']}\n```")
+
+        options = GoldView(data=data)
+
+        message = await message.channel.send(embed=embed, view=options)
+        options.set_message(message)
+
+    async def show_search_engraved_info(self, message):
+        data = get_gold_info()
+
+        embed = discord.Embed(
+            title="전각 검색",
             url=data.url,
             color=discord.Color.blue()
         )
@@ -347,18 +373,16 @@ class DedenneBot(discord.Client):
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
         m = "**1페이즈**\n"
-        m += "1파티```fix\n회오리 수류탄\n파괴 폭탄\n```\n"
-        m += "2파티```fix\n회오리 수류탄\n파괴 폭탄\n상태이상 관련 배틀 아이템```\n\n"
+        m += "<1파티>```fix\n회오리 수류탄\n파괴 폭탄\n```\n"
+        m += "<2파티>```fix\n회오리 수류탄\n파괴 폭탄\n상태이상 관련 배틀 아이템```\n"
         m += "**2페이즈**\n"
-        m += "내부```fix\n점토 수류탄\n수면 폭탄\n시간 정지 물약\n```\n"
-        m += "외부```fix\n회오리 수류탄\n```\n"
-        embed.add_field(name="배틀 아이템(1-2)", value=m)
-
-        m = "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n\n"
-        m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n\n"
-        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n\n"
-        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n\n"
-        embed.add_field(name="배틀 아이템(3-6)", value=m)
+        m += "<내부>```fix\n점토 수류탄\n수면 폭탄\n시간 정지 물약\n```\n"
+        m += "<외부>```fix\n회오리 수류탄\n```\n"
+        m += "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n"
+        m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n"
+        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n"
+        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n"
+        embed.add_field(name="배틀 아이템", value=m)
 
         options = AbrelshudView(data=None)
         message = await message.channel.send(embed=embed, view=options)
@@ -374,11 +398,11 @@ class DedenneBot(discord.Client):
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
         m = "**천공의 문 넬라시아**\n\n"
-        m += "천공의 파수꾼```fix\n회오리 or 암흑 수류탄\n신속 로브```\n"
-        m += "티엔```fix\n신속 로브```\n\n"
+        m += "<천공의 파수꾼>```fix\n회오리 or 암흑 수류탄\n신속 로브```\n"
+        m += "<티엔>```fix\n신속 로브```\n\n"
         m += "**영원한 빛의 요람**\n\n"
-        m += "프리우나```fix\n만능 물약\n성스러운 부적\n정화룬 or 정화 스킬```\n"
-        m += "라우리엘```fix\n시간 정지 물약\n화염 or 암흑 수류탄```\n"
+        m += "<프리우나>```fix\n만능 물약\n성스러운 부적```\n"
+        m += "<라우리엘>```fix\n시간 정지 물약\n화염 or 암흑 수류탄```\n"
 
         embed.add_field(name="배틀 아이템", value=m)
 
