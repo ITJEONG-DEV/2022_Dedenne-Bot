@@ -1,4 +1,5 @@
 from lostark import Profile, MariShop, GoldInfo
+from .. import DBManager
 
 import discord
 
@@ -572,6 +573,281 @@ class RaidView(DefaultView):
         m += f"3관문(1600)```diff\n+2750 골드\n-1900 골드\n{item} 8개```"
         m += f"총계```diff\n+5500 골드\n-4500 골드\n{item} 22개```"
         embed.add_field(name="일리아칸(하드)", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class ArgosView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아르고스",
+            description="입장레벨 1370, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "\n**1페이즈**```fix\n시간 정지 물약```\n\n"
+        m += "**2페이즈**\n"
+        m += "1파티```fix\n성스러운 부적\n만능 물약\n파괴 폭탄\n화염 수류탄```\n"
+        m += "2파티```fix\n점토 수류탄 or 회오리 수류탄```\n\n"
+        m += "**3페이즈**```fix\n모닥불\n만능 물약\n성스러운 부적\n암흑 수류탄 or 화염 수류탄```"
+        embed.add_field(name="배틀 아이템", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아르고스",
+            description="입장레벨 1370, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class BaltanView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="발탄(노말/하드)",
+            description="입장레벨 1415/1445, 관문 1-2페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```\n\n"
+        m += "**2페이즈**```fix\n물약\n파괴 폭탄 or 부식 폭탄\n시간 정지 물약```"
+        embed.add_field(name="배틀 아이템", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="발탄(노말/하드)",
+            description="입장레벨 1415/1445, 관문 1-2페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class BiackissView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="비아키스(노말/하드)",
+            description="입장레벨 1430/1460, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n시간 정지 물약\n신속 로브```\n\n"
+        m += "**2페이즈**```fix\n물약\n시간 정지 물약\n신속 로브\n화염 수류탄```\n\n"
+        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n시간 정지 물약\n수면 폭탄```"
+        embed.add_field(name="배틀 아이템", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="비아키스(노말/하드)",
+            description="입장레벨 1430/1460, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class KoukuSatonView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="쿠크세이튼(노말)",
+            description="입장레벨 1475, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```\n"
+        m += "**2페이즈**```fix\n물약\n시간 정지 물약\n암흑 수류탄\n성스러운 폭탄```\n"
+        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```"
+        embed.add_field(name="배틀 아이템", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="쿠크세이튼(노말)",
+            description="입장레벨 1475, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class AbrelshudView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말/하드)",
+            description="입장레벨 1490/1540, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "**1페이즈**\n"
+        m += "1파티```fix\n회오리 수류탄\n파괴 폭탄\n```\n"
+        m += "2파티```fix\n회오리 수류탄\n파괴 폭탄\n상태이상 관련 배틀 아이템```\n\n"
+        m += "**2페이즈**\n"
+        m += "내부```fix\n점토 수류탄\n수면 폭탄\n시간 정지 물약\n```\n"
+        m += "외부```fix\n회오리 수류탄\n```\n"
+        embed.add_field(name="배틀 아이템(1-2)", value=m)
+
+        m = "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n\n"
+        m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n\n"
+        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n\n"
+        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n\n"
+        embed.add_field(name="배틀 아이템(3-6)", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말/하드)",
+            description="입장레벨 1490/1540, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class KayangelView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="카양겔(노말/하드I/하드II/하드III)",
+            description="입장레벨 1475/1520/1560/1580, 던전",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "**천공의 문 넬라시아**\n\n"
+        m += "천공의 파수꾼```fix\n회오리 or 암흑 수류탄\n신속 로브```\n"
+        m += "티엔```fix\n신속 로브```\n\n"
+        m += "**영원한 빛의 요람**\n\n"
+        m += "프리우나```fix\n만능 물약\n성스러운 부적\n정화룬 or 정화 스킬```\n"
+        m += "라우리엘```fix\n시간 정지 물약\n화염 or 암흑 수류탄```\n"
+
+        embed.add_field(name="배틀 아이템", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="카양겔(노말/하드I/하드II/하드III)",
+            description="입장레벨 1475/1520/1560/1580, 던전",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+
+class IlliakanView(DefaultView):
+    def __init__(self, data):
+        super().__init__(data)
+        self.message = None
+
+    @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
+    async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="일리아칸(노말/하드)",
+            description="입장레벨 1580/1600, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = "**1페이즈**```fix\n물약\n성스러운 부적\n만능 물약\n회오리 or 암흑 수류탄```\n"
+        m += "**2페이즈**```fix\n물약\n부식 or 파괴 폭탄\n암흑 수류탄\n진군의 깃발 or 성스러운 부적```\n"
+        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n파괴 폭탄\n성스러운 부적```"
+        embed.add_field(name="배틀 아이템", value=m)
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="일리아칸(노말/하드)",
+            description="입장레벨 1580/1600, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()

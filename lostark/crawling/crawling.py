@@ -40,6 +40,7 @@ def get_gold_info(base_url="https://loatool.taeu.kr/"):
 
     return GoldInfo(bs_object, base_url)
 
+
 if __name__ == "__main__":
     # bs_object = get_html_object_korean()
     # print(str(bs_object))
