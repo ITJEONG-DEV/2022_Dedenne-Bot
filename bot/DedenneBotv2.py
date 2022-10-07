@@ -239,6 +239,14 @@ class DedenneBot(discord.Client):
         keyword = message.content.split()[-1]
 
         keyword_dict = {
+            "스커":"스트라이커",
+            "디트": "디스트로이어",
+            "배마": "배틀마스터",
+            "알카": "아르카나",
+            "데헌": "데빌헌터",
+            "가짜건슬":"데빌헌터",
+            "홀나": "홀리나이트",
+
             "구동": "구슬동자",
             "강무": "강화 무기",
             "결대": "결투의 대가",
@@ -290,15 +298,16 @@ class DedenneBot(discord.Client):
         if keyword in keyword_dict.keys():
             keyword = keyword_dict[keyword]
 
-        target = None
+        target = []
         for engraved in data.engraveds:
             if keyword in engraved.name:
-                target = engraved
+                target.append(engraved)
 
-        if target is None:
+        if len(target) == 0:
             embed.add_field(name=f"{keyword}", value=f"{keyword} 각인서를 찾을 수 없습니다")
         else:
-            embed.add_field(name=f"{target.name}", value=f"{target.price} 골드")
+            for item in target:
+                embed.add_field(name=f"{item.name}", value=f"{item.price} 골드")
 
         await message.channel.send(embed=embed)
 
