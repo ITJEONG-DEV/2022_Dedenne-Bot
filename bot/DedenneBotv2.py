@@ -236,23 +236,71 @@ class DedenneBot(discord.Client):
         options.set_message(message)
 
     async def show_search_engraved_info(self, message):
+        keyword = message.content.split()[-1]
+
+        keyword_dict = {
+            "구동": "구슬동자",
+            "강무": "강화 무기",
+            "결대": "결투의 대가",
+            "극의체술": "극의:",
+            "급타": "급소타격",
+            "고기": "고독한 기사",
+            "기대": "기습의 대가",
+            "달소": "달의 소리",
+            "달저": "달인의 저력",
+            "돌대": "돌격대장",
+            "마효증": "마나 효율 증가",
+            "마흐": "마나의 흐름",
+            "부뼈": "부러진 뼈",
+            "분망": "분노의 망치",
+            "번분": "번개의 분노",
+            "사시": "사냥의 시간",
+            "선필": "선수필승",
+            "시집": "시선 집중",
+            "아기": "아르데타인의 기술",
+            "안상": "안정된 상태",
+            "약무": "약자 무시",
+            "예둔": "예리한 둔기",
+            "저받": "저주받은",
+            "전태": "전투 태세",
+            "절구": "절실한 구원",
+            "정단": "정밀 단도",
+            "정흡": "정기 흡수",
+            "중수": "중력 수련",
+            "중착": "중갑 착용",
+            "진용": "진실된 용맹",
+            "질증": "질량 증가",
+            "최마증": "최대 마나 증가",
+            "충단": "충격 단련",
+            "타대": "타격의 대가",
+            "폭전": "폭발물 전문가",
+            "피메": "피스메이커"
+        }
+
         data = get_gold_info()
 
         embed = discord.Embed(
-            title="전각 검색",
+            title="전설 각인서 검색",
             url=data.url,
             color=discord.Color.blue()
         )
 
-        embed.set_footer(text=data.time + " 기준", icon_url=self.icon_url)
+        embed.set_footer(text=data.time + " 기준", icon_url=icon_url)
 
-        embed.add_field(name="💎골드 팔 때", value=f"```yaml\n{data.golds['sell']}\n```")
-        embed.add_field(name="💰골드 살 때", value=f"```fix\n{data.golds['buy']}\n```")
+        if keyword in keyword_dict.keys():
+            keyword = keyword_dict[keyword]
 
-        options = GoldView(data=data)
+        target = None
+        for engraved in data.engraveds:
+            if keyword in engraved.name:
+                target = engraved
 
-        message = await message.channel.send(embed=embed, view=options)
-        options.set_message(message)
+        if target is None:
+            embed.add_field(name=f"{keyword}", value=f"{keyword} 각인서를 찾을 수 없습니다")
+        else:
+            embed.add_field(name=f"{target.name}", value=f"{target.price} 골드")
+
+        await message.channel.send(embed=embed)
 
     async def show_engraved_info(self, message):
         data = get_gold_info()
