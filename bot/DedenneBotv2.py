@@ -376,8 +376,8 @@ class DedenneBot(discord.Client):
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
-        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```\n\n"
-        m += "**2페이즈**```fix\n물약\n파괴 폭탄 or 부식 폭탄\n시간 정지 물약```"
+        m = "**1페이즈**```fix\n회오리 수류탄\n성스러운 부적\n만능 물약```\n\n"
+        m += "**2페이즈**```fix\n파괴 폭탄 or 부식 폭탄\n시간 정지 물약```"
         embed.add_field(name="배틀 아이템", value=m)
 
         options = BaltanView(data=None)
@@ -393,9 +393,9 @@ class DedenneBot(discord.Client):
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
-        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n시간 정지 물약\n신속 로브```\n\n"
-        m += "**2페이즈**```fix\n물약\n시간 정지 물약\n신속 로브\n화염 수류탄```\n\n"
-        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n시간 정지 물약\n수면 폭탄```"
+        m = "**1페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n신속 로브```\n\n"
+        m += "**2페이즈**```fix\n시간 정지 물약\n신속 로브\n화염 수류탄```\n\n"
+        m += "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄```"
         embed.add_field(name="배틀 아이템", value=m)
 
         options = BiackissView(data=None)
@@ -411,9 +411,9 @@ class DedenneBot(discord.Client):
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
-        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```\n"
-        m += "**2페이즈**```fix\n물약\n시간 정지 물약\n암흑 수류탄\n성스러운 폭탄```\n"
-        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```"
+        m = "**1페이즈**```fix\n회오리 수류탄\n성스러운 부적\n만능 물약```\n"
+        m += "**2페이즈**```fix\n시간 정지 물약\n암흑 수류탄\n성스러운 폭탄\n성스러운 부적```\n"
+        m += "**3페이즈**```fix\n회오리 수류탄\n성스러운 부적\n만능 물약```"
         embed.add_field(name="배틀 아이템", value=m)
 
         options = KoukuSatonView(data=None)
@@ -437,8 +437,8 @@ class DedenneBot(discord.Client):
         m += "<외부>```fix\n회오리 수류탄\n```\n"
         m += "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n"
         m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n"
-        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n"
-        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n"
+        m += "**5페이즈**```fix\n시간 정지 물약\n신속 로브\n회오리 수류탄\n```\n"
+        m += "**6페이즈**```fix\n시간 정지 물약\n신속 로브\n회오리 or 암흑 수류탄\n```\n"
         embed.add_field(name="배틀 아이템", value=m)
 
         options = AbrelshudView(data=None)

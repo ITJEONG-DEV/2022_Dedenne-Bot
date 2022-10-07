@@ -598,14 +598,14 @@ class ArgosView(DefaultView):
         m = "\n**1페이즈**```fix\n시간 정지 물약```\n\n"
         m += "**2페이즈**\n"
         m += "1파티```fix\n성스러운 부적\n만능 물약\n파괴 폭탄\n화염 수류탄```\n"
-        m += "2파티```fix\n점토 수류탄 or 회오리 수류탄```\n\n"
-        m += "**3페이즈**```fix\n모닥불\n만능 물약\n성스러운 부적\n암흑 수류탄 or 화염 수류탄```"
+        m += "2파티```fix\n점토 or 회오리 수류탄```\n\n"
+        m += "**3페이즈**```fix\n모닥불\n만능 물약\n성스러운 부적\n암흑 or 화염 수류탄```"
         embed.add_field(name="배틀 아이템", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아르고스",
@@ -614,6 +614,83 @@ class ArgosView(DefaultView):
         )
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "시간 정지 물약",
+            "",
+            "[자리]",
+            "파티 번호 x3",
+            "",
+            "[작은 피자]",
+            "태양 1, 7시/달 11, 5시",
+            "```"
+        ]
+        embed.add_field(name="1페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아르고스",
+            description="입장레벨 1370, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템-1파티]",
+            "성스러운 부적, 만능 물약, 파괴 폭탄, 화염 수류탄",
+            "",
+            "[배틀아이템-2파티]",
+            "점토 or 회오리 수류탄",
+            "",
+            "[2-1 페이즈]",
+            "브리핑 및 기믹 수행: 외부 안전, 내부 안전, 부분 안전",
+            "",
+            "[2-2 페이즈]",
+            "석상, 바닥패턴, 균열(무력화)",
+            "```"
+        ]
+        embed.add_field(name="2페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아르고스",
+            description="입장레벨 1370, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "모닥불, 만능 물약, 성스러운 부적, 암흑 or 화염 수류탄",
+            "",
+            "[씨앗]",
+            "낮: 초록, 밤: 빨강, 새벽: 하양",
+            "",
+            "[낮 전멸기]",
+            "장판 들어가기 / 황금씨앗에서 태양 버프 획득",
+            "",
+            "[밤 전멸기]",
+            "장판 들어가기 / 보라 씨앗 지우기",
+            "",
+            "[새벽 전멸기]",
+            "하얀 씨앗 밟기",
+            "```"
+        ]
+        embed.add_field(name="3페이즈", value="\n".join(m))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -634,14 +711,14 @@ class BaltanView(DefaultView):
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
-        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```\n\n"
-        m += "**2페이즈**```fix\n물약\n파괴 폭탄 or 부식 폭탄\n시간 정지 물약```"
+        m = "**1페이즈**```fix\n회오리 수류탄\n성스러운 부적\n만능 물약```\n\n"
+        m += "**2페이즈**```fix\n파괴 폭탄 or 부식 폭탄\n시간 정지 물약```"
         embed.add_field(name="배틀 아이템", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="발탄(노말/하드)",
@@ -650,6 +727,63 @@ class BaltanView(DefaultView):
         )
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 수류탄, 성스러운 부적, 만능 물약",
+            "",
+            "[에스더 스킬]",
+            "1먹2웨 / 노먹 실리안 등",
+            "",
+            "[자리]",
+            "구슬 먹는 자리 1 ~ 8번",
+            "",
+            "[45줄] 루가루(빨강) 변신",
+            "[40줄] 루카스(파랑) 난입",
+            "[33줄] 암흑/감금",
+            "[30줄-전멸기] 결속 구슬(무력화)",
+            "[25줄] 루가루(빨강) 난입",
+            "[15줄-전멸기] 결속 구슬(무력화)",
+            "[0-15줄] 공포 무력",
+            "```"
+        ]
+        embed.add_field(name="1페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="발탄(노말/하드)",
+            description="입장레벨 1415/1445, 관문 1-2페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "파괴 폭탄(7) or 부식 폭탄(1) / 시간 정지 물약",
+            "",
+            "[에스더 스킬]",
+            "130줄 바훈투르, 16줄 바훈투르, 유령 페이즈-실리안",
+            "",
+            "[160줄] 갑옷 파괴(박치기)",
+            "[130줄-전멸기] 바훈투르, 로나운",
+            "[110줄] 임포스터",
+            "[88줄] 지형 파괴",
+            "[65줄-전멸기] 버러지(카운터)",
+            "[30줄] 지형 파괴",
+            "[16줄] 4방향 찍기/연한파신권 - 바훈투르",
+            "=========================\n"
+            "[45줄] 유령 페이즈(카운터)",
+            "[39, 27, 14줄-잡기]",
+            "```"
+        ]
+        embed.add_field(name="2페이즈", value="\n".join(m))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -670,15 +804,15 @@ class BiackissView(DefaultView):
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
-        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n시간 정지 물약\n신속 로브```\n\n"
-        m += "**2페이즈**```fix\n물약\n시간 정지 물약\n신속 로브\n화염 수류탄```\n\n"
-        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n시간 정지 물약\n수면 폭탄```"
+        m = "**1페이즈**```fix\nn회오리 수류탄\n시간 정지 물약\n신속 로브```\n\n"
+        m += "**2페이즈**```fix\nn시간 정지 물약\n신속 로브\n화염 수류탄```\n\n"
+        m += "**3페이즈**```fix\nn회오리 수류탄\n시간 정지 물약\n수면 폭탄```"
         embed.add_field(name="배틀 아이템", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="비아키스(노말/하드)",
@@ -687,6 +821,96 @@ class BiackissView(DefaultView):
         )
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 수류탄, 시간 정지 물약, 신속 로브",
+            "",
+            "[에스더 스킬]",
+            "욕망 팀 니나브: 아디다스 패턴, 걷어차고 순간이동 위치",
+            "",
+            "[자리]",
+            "구슬 넣기 자리 11, 1, 5, 7시",
+            "",
+            "[55줄] 쾌락/욕망 파티 분리",
+            "[49줄-전멸기] 구슬 드리블(빨파초흰검)",
+            "[37줄-전멸기] 구슬 먹기 + 무력 + 내/외부 브리핑",
+            "[30줄] 파티 교체",
+            "[25줄-전멸기] 안전장판 브리핑",
+            "[13줄-전멸기] 구슬 먹기 + 무력 + 내/외부 브리핑"
+            ""
+            "```"
+        ]
+        embed.add_field(name="1페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="비아키스(노말/하드)",
+            description="입장레벨 1430/1460, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "시간 정지 물약, 신속 로브, 화염 수류탄",
+            "",
+            "[에스더 스킬]",
+            "니나브: 감전 장판, 기절링, 와플 등",
+            "",
+            "[자리]",
+            "보접빨핀 자리: 11, 3, 7 날개와 십자구슬",
+            "검빨구슬: 11, 5, 7시 두 명씩 + 스페어 둘",
+            "",
+            "[145줄] 데칼",
+            "[120줄] 보접빨핀",
+            "[90줄] 데칼",
+            "[65줄] 검빨패턴",
+            "```"
+        ]
+        embed.add_field(name="2페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="비아키스(노말/하드)",
+            description="입장레벨 1430/1460, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 수류탄, 시간 정지 물약, 수면 폭탄",
+            "",
+            "[에스더 스킬]",
+            "135줄 니나브, 0줄 웨이",
+            "",
+            "[170줄] 늪 패턴",
+            "[152줄-전멸기] 칼/석상",
+            "[135줄-전멸기] 아재 패턴",
+            "[120줄] 매혹 패턴",
+            "[102줄-전멸기] 무력 후 시정",
+            "[77줄] 늪 패턴",
+            "[55줄-전멸기] 촉수 패턴",
+            "[37줄(하드)] 욕망구슬 패턴",
+            "[0줄] 무력",
+            ""
+            "```"
+        ]
+        embed.add_field(name="3페이즈", value="\n".join(m))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -707,15 +931,15 @@ class KoukuSatonView(DefaultView):
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
 
-        m = "**1페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```\n"
-        m += "**2페이즈**```fix\n물약\n시간 정지 물약\n암흑 수류탄\n성스러운 폭탄```\n"
-        m += "**3페이즈**```fix\n물약\n회오리 수류탄\n성스러운 부적\n만능 물약```"
+        m = "**1페이즈**```fix\nn회오리 수류탄\n성스러운 부적\n만능 물약```\n"
+        m += "**2페이즈**```fix\nn시간 정지 물약\n암흑 수류탄\n성스러운 폭탄\n성스러운 부적```\n"
+        m += "**3페이즈**```fix\nn회오리 수류탄\n성스러운 부적\n만능 물약```"
         embed.add_field(name="배틀 아이템", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="쿠크세이튼(노말)",
@@ -724,6 +948,98 @@ class KoukuSatonView(DefaultView):
         )
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 수류탄, 성스러운 부적, 만능 물약",
+            "",
+            "[에스더 스킬]",
+            "니나브: 불 뿜기, 카드마술, 무력 후, 문양 발판, 카운터 직후",
+            "",
+            "[자리]",
+            "세이튼  찾기: 곱3+1",
+            "",
+            "[주사위 감금 패턴]",
+            "- 1인 속박: 3번째 카드가 감금자",
+            "- 3인 속박: 속박X인 사람이 1번째 카드",
+            "- 같은 색이 연달아 나온다",
+            "- (스페이드-하트) / (클로버-다이아)는 짝꿍",
+            "",
+            "[130줄-전멸기] 방패 피해서 무력화",
+            "[110줄-전멸기] 세이튼 찾기",
+            "[85줄] 댄스 타임",
+            "[60줄-전멸기] 무력화",
+            "[50줄] 룰렛",
+            "[30줄-전멸기] 세이튼 찾기"
+            "```"
+        ]
+        embed.add_field(name="1페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="쿠크세이튼(노말)",
+            description="입장레벨 1475, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "시간 정지 물약, 암흑 수류탄, 성스러운 폭탄, 성스러운 부적",
+            "",
+            "[에스더 스킬]",
+            "니나브, 이난나-벨가 패턴",
+            "",
+            "[자리]",
+            "광기의 장막: 12왼 34오",
+            "",
+            "[125줄] 세이튼 등장",
+            "[110줄] 광기의 장막",
+            "[95줄-전멸기] 쿠크 찾기",
+            "[80줄-전멸기] 카드 미로 (이난나)",
+            "[55줄] 별 패턴(피자)",
+            "[25줄-전멸기] 쿠크 찾기"
+            "```"
+        ]
+        embed.add_field(name="2페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="쿠크세이튼(노말)",
+            description="입장레벨 1475, 관문 1-3페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 수류탄, 성스러운 부적, 만능 물약",
+            "",
+            "[에스더 스킬]",
+            "니나브, 이난나-쇼타임, 빙고",
+            "",
+            "[155줄-전멸기] 1마-톱날",
+            "[128줄-전멸기] 2마-갈고리",
+            "[90줄-전멸기] 쇼타임 - 어글자 폭탄",
+            "[82줄-전멸기] 3마-톱날+갈고리",
+            "[55줄-전멸기] 4마-톱날+갈고리+레버",
+            "[0줄] 빙고 - 3턴마다 빙고 완성"
+            "```"
+        ]
+        embed.add_field(name="3페이즈", value="\n".join(m))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -737,8 +1053,8 @@ class AbrelshudView(DefaultView):
     @discord.ui.button(label="레이드 정보", style=discord.ButtonStyle.grey)
     async def on_click_raid_1(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
-            title="아브렐슈드(노말/하드)",
-            description="입장레벨 1490/1540, 관문 1-6페이즈",
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
             color=discord.Color.blue()
         )
 
@@ -752,22 +1068,234 @@ class AbrelshudView(DefaultView):
         m += "<외부>```fix\n회오리 수류탄\n```\n"
         m += "**3페이즈**```fix\n회오리 수류탄\n시간 정지 물약\n수면 폭탄\n신속 로브```\n"
         m += "**4페이즈**```fix\n회오리 or 화염 수류탄\n시간 정지 물약\n```\n"
-        m += "**5페이즈**```fix\n시간 정지 물약\n회오리 수류탄\n```\n"
-        m += "**6페이즈**```fix\n시간 정지 물약\n회오리 or 암흑 수류탄\n```\n"
+        m += "**5페이즈**```fix\n시간 정지 물약\n신속 로브\n회오리 수류탄\n```\n"
+        m += "**6페이즈**```fix\n시간 정지 물약\n신속 로브\n회오리 or 암흑 수류탄\n```\n"
         embed.add_field(name="배틀 아이템", value=m)
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
-            title="아브렐슈드(노말/하드)",
-            description="입장레벨 1490/1540, 관문 1-6페이즈",
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
             color=discord.Color.blue()
         )
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "1파티: 회오리 수류탄, 파괴 폭탄",
+            "2파티: 회오리 수류탄, 파괴 폭탄, 상태이상 관련 배틀 아이템",
+            "",
+            "[에스더 스킬]",
+            "실리안: 망치+활 합체 후, 아제나: 잡몹 처리",
+            "",
+            "[자리]",
+            "안전지대: 1파티(곱3), 2파티(곱3+1)",
+            "",
+            "[투견/석상]",
+            "-1파티(슬픔): 투견-파괴, 석상-포도알 드리블",
+            "-1파티(절망): 투견-잡몹, 석상-무력화 실패 시 공포",
+            "-2파티(분노): 투견-타수, 석상-무력화 시 아군 디버프 제거",
+            "-2파티(분노): 투견-무력화, 석상-상태이상 걸어서 디버프 캔슬",
+            "",
+            "[85줄] 안전지대",
+            "[43줄] 카운터 - 아제나",
+            "```"
+        ]
+        embed.add_field(name="1페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "내부: 점토 수류탄, 수면 폭탄, 시간 정지 물약",
+            "외부: 회오리 수류탄",
+            "",
+            "[에스더 스킬]",
+            "실리안, 아제나",
+            "",
+            "[내부]",
+            "-145줄: 보스 모드",
+            "-128줄: PVP 모드",
+            "-80줄: 보스 모드",
+            "-48줄: PVP 모드(강화)",
+            "-입장 3회 제한",
+            "",
+            "[135줄] 주황구슬",
+            "[110줄] 빨파장판",
+            "[80줄] 무력 후 구슬파괴",
+            "[45줄] 빨간 구슬",
+            "[40줄] 기사",
+            "```"
+        ]
+        embed.add_field(name="2페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 수류탄, 시간 정지 물약, 수면 폭탄, 신속 로브",
+            "",
+            "[에스더 스킬]",
+            "니나브, ",
+            "",
+            "[미로패턴]",
+            "-벽에 닿으면 밀려남",
+            "-낙인 생긴 사람은 미니맵의 노란 점으로 탈출",
+            "-실패 시 전원 매혹",
+            "",
+            "[도형 먹이기]",
+            "-아슈타로테와 같은 도형 먹이기",
+            "-장판에 2인 버프 받기(곱3+1) 혹은 시정",
+            "",
+            "[145줄] 한컴타자",
+            "[100줄] 눈 무력화",
+            "[85줄] 광폭화",
+            "[42줄] 빨노파 도형 패턴",
+            "[0줄] 빨파장판",
+            "```"
+        ]
+        embed.add_field(name="3페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(4페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_5(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀아이템]",
+            "회오리 or 화염 수류탄, 시간 정지 물약",
+            "",
+            "[에스더 스킬]",
+            "니나브, 웨이, 이난나",
+            "",
+            "[빨강 큐브]",
+            "-전멸기: 헤드방향 피라미드, 무력화",
+            "-변형 패턴: 꼭짓점 안전",
+            "",
+            "[노랑 큐브]",
+            "-전멸기: 노란 구슬 터뜨리기, 먹기 / 나머지 무력화",
+            "-변형 패턴: 보라색 구슬 생성 후 탄막",
+            "",
+            "[파랑 큐브]",
+            "-전멸기: 2인 4팀 무력화 / 감금 또는 아재패턴",
+            "-변형 패턴: 면 부분 외곽 안전",
+            "",
+            "[170줄-전멸기]",
+            "[160줄] 변형",
+            "[130줄] 변형",
+            "[120줄-전멸기]",
+            "[95줄] 무력화",
+            "[65줄] 변형",
+            "[60줄-전멸기]",
+            "[20줄] 무력화",
+            "```"
+        ]
+        embed.add_field(name="4페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(5페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_6(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀 아이템]",
+            "시간 정지 물약, 신속로브, 회오리 수류탄",
+            "",
+            "[에스더 스킬]",
+            "아제나: 140줄, 110줄 능지, 450줄, 샨디",
+            "",
+            "[180줄] 도형 생성",
+            "[140줄] 블랙홀 설치",
+            "[110줄] 무력>큐브>무력>능지",
+            "[90줄] 도형 생성",
+            "[50줄] 블랙홀 설치",
+            "```"
+        ]
+        embed.add_field(name="5페이즈", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(6페이즈)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_7(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="아브렐슈드(노말)",
+            description="입장레벨 1490, 관문 1-6페이즈",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "```ini",
+            "[배틀 아이템]",
+            "시간 정지 물약, 신속로브, 회오리 or 암흑 수류탄",
+            "",
+            "[에스더 스킬]",
+            "188줄: 아제나, 112줄: 아제나 or 샨디, 32줄: 이난나 or 아제나",
+            "",
+            "[222줄] 블랙홀&화이트홀",
+            "[212줄] 몽환 세계",
+            "[188줄] 1 운석",
+            "[188줄] 맞이하라(메테오)",
+            "[137줄] 2 운석",
+            "[112줄] 찬미하라",
+            "[87줄] 2 운석",
+            "[62줄] 블랙홀&화이트홀",
+            "[37줄] 4 운석",
+            "[32줄] 몽환 세계",
+            "[25줄] 추락하라 (타임어택)",
+            "```"
+        ]
+        embed.add_field(name="6페이즈", value="\n".join(m))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
@@ -800,7 +1328,7 @@ class KayangelView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(준비중)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="공략(천공의 문 넬라시아)", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="카양겔(노말/하드I/하드II/하드III)",
@@ -809,6 +1337,72 @@ class KayangelView(DefaultView):
         )
 
         embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "<천공의 파수꾼>",
+            "```ini",
+            "[배틀아이템]",
+            "회오리 or 암흑 수류탄, 신속 로브",
+            "",
+            "[기타 패턴]",
+            "- 칼 3개 감금",
+            "",
+            "[55줄-전멸기] 무력 후 보라or파랑 구슬",
+            "[25줄-전멸기] 고리(1-2-3) 부수기",
+            "```",
+            "<티엔>",
+            "```ini",
+            "[배틀아이템]",
+            "신속 로브",
+            "",
+            "[빨간 눈 똥]",
+            "- 외곽에 장판 빼기",
+            "",
+            "[55줄-전멸기] 장판 피하기",
+            "[30줄] 패턴 강화",
+            "```"
+        ]
+        embed.add_field(name="천공의 문 넬라시아", value="\n".join(m))
+
+        await self.message.edit(embed=embed)
+        await interaction.response.defer()
+
+    @discord.ui.button(label="공략(영원한 빛의 요람)", style=discord.ButtonStyle.grey)
+    async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
+        embed = discord.Embed(
+            title="카양겔(노말/하드I/하드II/하드III)",
+            description="입장레벨 1475/1520/1560/1580, 던전",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="로스트아크", icon_url=icon_url)
+
+        m = [
+            "<프리우나>",
+            "```ini",
+            "[배틀아이템]",
+            "만능 물약, 성스러운 부적, 정화룬/스킬 추천",
+            "",
+            "[62줄-전멸기] 반시계 상성 오브젝트 파괴",
+            "[40줄-전멸기] 기사 카운터 후 무력",
+            "[20줄] 색상 띠 위 상성 오브젝트 파괴"
+            "```",
+            "<라우리엘>",
+            "```ini",
+            "[배틀아이템]",
+            "시간 정지 물약, 화염 or 암흑 수류탄",
+            "",
+            "[빨간 눈 똥]",
+            "- 외곽에 장판 빼기",
+            "",
+            "[180줄] 결정체 패턴",
+            "[140줄] 빛 반사 릴레이",
+            "[100줄] 진실의 눈(흰 구슬먹기)",
+            "[60줄] 분신 찾기",
+            "[컷씬 이후] 강렬한 시선",
+            "```"
+        ]
+        embed.add_field(name="영원한 빛의 요람", value="\n".join(m))
 
         await self.message.edit(embed=embed)
         await interaction.response.defer()
