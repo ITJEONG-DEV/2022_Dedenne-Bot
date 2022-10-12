@@ -605,7 +605,7 @@ class ArgosView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="1페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아르고스",
@@ -632,7 +632,7 @@ class ArgosView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="2페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아르고스",
@@ -662,7 +662,7 @@ class ArgosView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="3페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아르고스",
@@ -718,7 +718,7 @@ class BaltanView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="1페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="발탄(노말/하드)",
@@ -753,7 +753,7 @@ class BaltanView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="2페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="발탄(노말/하드)",
@@ -812,7 +812,7 @@ class BiackissView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="1페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="비아키스(노말/하드)",
@@ -847,7 +847,7 @@ class BiackissView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="2페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="비아키스(노말/하드)",
@@ -880,7 +880,7 @@ class BiackissView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="3페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="비아키스(노말/하드)",
@@ -939,7 +939,7 @@ class KoukuSatonView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="1페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="쿠크세이튼(노말)",
@@ -979,7 +979,7 @@ class KoukuSatonView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="2페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="쿠크세이튼(노말)",
@@ -1013,7 +1013,7 @@ class KoukuSatonView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="3페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="쿠크세이튼(노말)",
@@ -1075,7 +1075,7 @@ class AbrelshudView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(1페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="1페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아브렐슈드(노말)",
@@ -1112,7 +1112,7 @@ class AbrelshudView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(2페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="2페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아브렐슈드(노말)",
@@ -1150,7 +1150,7 @@ class AbrelshudView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(3페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="3페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_4(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아브렐슈드(노말)",
@@ -1189,7 +1189,7 @@ class AbrelshudView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(4페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="4페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_5(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아브렐슈드(노말)",
@@ -1234,7 +1234,7 @@ class AbrelshudView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(5페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="5페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_6(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아브렐슈드(노말)",
@@ -1264,7 +1264,7 @@ class AbrelshudView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(6페이즈)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="6페이즈", style=discord.ButtonStyle.grey)
     async def on_click_raid_7(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="아브렐슈드(노말)",
@@ -1328,7 +1328,7 @@ class KayangelView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(천공의 문 넬라시아)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="천공의 문 넬라시아", style=discord.ButtonStyle.grey)
     async def on_click_raid_2(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="카양겔(노말/하드I/하드II/하드III)",
@@ -1367,7 +1367,7 @@ class KayangelView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="공략(영원한 빛의 요람)", style=discord.ButtonStyle.grey)
+    @discord.ui.button(label="영원한 빛의 요람", style=discord.ButtonStyle.grey)
     async def on_click_raid_3(self, interaction: discord.Interaction, button: discord.ui.button()):
         embed = discord.Embed(
             title="카양겔(노말/하드I/하드II/하드III)",

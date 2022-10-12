@@ -92,6 +92,9 @@ class DedenneBot(discord.Client):
                 elif content == "occupation-war":
                     await self.show_occupation_war_info(message)
 
+                elif content == "adventure-island":
+                    await self.show_adventure_island_info(message)
+
                 # 레이드 공략
 
                 elif content == "argos-solution":
@@ -288,7 +291,7 @@ class DedenneBot(discord.Client):
         data = get_gold_info()
 
         embed = discord.Embed(
-            title="전설 각인서 검색",
+            title="전설 각인서 검색 결과",
             url=data.url,
             color=discord.Color.blue()
         )
@@ -344,6 +347,20 @@ class DedenneBot(discord.Client):
 
         embed.add_field(name="개최 가능 요일", value="목, 금, 토, 일")
         embed.add_field(name="참여 가능 시간", value="12:30 / 16:30 / 18:30 / 19:30 / 22:30 / 23:30")
+
+        await message.channel.send(embed=embed)
+
+    async def show_adventure_island_info(self, message):
+        embed = discord.Embed(
+            title="모험섬 시간",
+            url="https://lostark.game.onstove.com/Library/Tip/Views/138208?page=1&libraryStatusType=0&librarySearchCategory=0&searchtype=0&searchtext=&ordertype=latest&LibraryQaAnswerType=None&UserPageType=0",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="2021. 7. 10 기준", icon_url=self.icon_url)
+
+        embed.add_field(name="개최 가능 요일", value="목, 금, 토, 일")
+        embed.add_field(name="등장 시간", value="11:00 / 13:00 / 19:00 / 21:00 / 23:00")
 
         await message.channel.send(embed=embed)
 
