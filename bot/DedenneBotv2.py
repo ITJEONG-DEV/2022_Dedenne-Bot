@@ -30,10 +30,19 @@ class DedenneBot(discord.Client):
 
         self.icon_url = "https://cdn-lostark.game.onstove.com/2018/obt/assets/images/common/icon/favicon-192.png"
 
-        print('Logged on as', self.user)
 
         global ready
         ready = True
+
+        # 957221859953352725 여기가 어디죠?
+        # 1021645719528022077 디스코드봇 테스트용 서버
+        for guild in self.guilds:
+            if guild.id == 957221859953352725:
+                for channel in guild.text_channels:
+                    if "봇" in channel.name or "bot" in channel.name:
+                        await channel.send("데덴네봇 영업 시작!")
+
+        print('Logged on as', self.user)
 
     async def on_message(self, message):
         await self.wait_until_ready()
@@ -220,6 +229,8 @@ class DedenneBot(discord.Client):
         options.set_message(message)
 
     async def show_gold_info(self, message):
+        return await self.send_message(message.channel, "현재 이용 불가능")
+
         data = get_gold_info()
 
         embed = discord.Embed(
@@ -239,6 +250,8 @@ class DedenneBot(discord.Client):
         options.set_message(message)
 
     async def show_search_engraved_info(self, message):
+        return await self.send_message(message.channel, "현재 이용 불가능")
+
         keyword = message.content.split()[-1]
 
         keyword_dict = {
@@ -315,6 +328,8 @@ class DedenneBot(discord.Client):
         await message.channel.send(embed=embed)
 
     async def show_engraved_info(self, message):
+        return await self.send_message(message.channel, "현재 이용 불가능")
+
         data = get_gold_info()
 
         embed = discord.Embed(
