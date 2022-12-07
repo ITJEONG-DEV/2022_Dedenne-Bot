@@ -183,3 +183,5 @@ if __name__ == "__main__":
     # print(get_characters("데덴네귀여워"))
     # print(get_armories("데덴네귀여워"))
     print(get_engraving_item("소서리스"))
+
+    # print(get_profiles("데덴네귀여워"))

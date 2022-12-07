@@ -4,7 +4,7 @@ from bot.botWorker import *
 from data import *
 from util import parse_json
 
-from lostark import get_character_data, get_mari_shop, get_gold_info
+from lostark import get_character_data, get_mari_shop, get_gold_info, get_engraving_item
 from bot.view import *
 
 from . import DBManager
@@ -30,7 +30,6 @@ class DedenneBot(discord.Client):
 
         self.icon_url = "https://cdn-lostark.game.onstove.com/2018/obt/assets/images/common/icon/favicon-192.png"
 
-
         global ready
         ready = True
 
@@ -41,7 +40,7 @@ class DedenneBot(discord.Client):
                 for channel in guild.text_channels:
                     if "봇" in channel.name or "bot" in channel.name:
                         self.channel = channel
-                        await channel.send("데덴네봇 영업 시작!")
+                        # await channel.send("데덴네봇 영업 시작!")
 
         print('Logged on as', self.user)
 
@@ -232,36 +231,16 @@ class DedenneBot(discord.Client):
     async def show_gold_info(self, message):
         return await self.send_message(message.channel, "현재 이용 불가능")
 
-        data = get_gold_info()
-
-        embed = discord.Embed(
-            title="골드 시세",
-            url=data.url,
-            color=discord.Color.blue()
-        )
-
-        embed.set_footer(text=data.time + " 기준", icon_url=self.icon_url)
-
-        embed.add_field(name="💎골드 팔 때", value=f"```yaml\n{data.golds['sell']}\n```")
-        embed.add_field(name="💰골드 살 때", value=f"```fix\n{data.golds['buy']}\n```")
-
-        options = GoldView(data=data)
-
-        message = await message.channel.send(embed=embed, view=options)
-        options.set_message(message)
-
     async def show_search_engraved_info(self, message):
-        return await self.send_message(message.channel, "현재 이용 불가능")
-
         keyword = message.content.split()[-1]
 
         keyword_dict = {
-            "스커":"스트라이커",
+            "스커": "스트라이커",
             "디트": "디스트로이어",
             "배마": "배틀마스터",
             "알카": "아르카나",
             "데헌": "데빌헌터",
-            "가짜건슬":"데빌헌터",
+            "가짜건슬": "데빌헌터",
             "홀나": "홀리나이트",
 
             "구동": "구슬동자",
@@ -302,55 +281,29 @@ class DedenneBot(discord.Client):
             "피메": "피스메이커"
         }
 
-        data = get_gold_info()
-
-        embed = discord.Embed(
-            title="전설 각인서 검색 결과",
-            url=data.url,
-            color=discord.Color.blue()
-        )
-
-        embed.set_footer(text=data.time + " 기준", icon_url=icon_url)
-
         if keyword in keyword_dict.keys():
             keyword = keyword_dict[keyword]
 
-        target = []
-        for engraved in data.engraveds:
-            if keyword in engraved.name:
-                target.append(engraved)
+        data = get_engraving_item(keyword)
 
-        if len(target) == 0:
+        embed = discord.Embed(
+            title="전설 각인서 검색 결과",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(icon_url=icon_url)
+
+        if len(data) == 0:
             embed.add_field(name=f"{keyword}", value=f"{keyword} 각인서를 찾을 수 없습니다")
         else:
-            for item in target:
-                embed.add_field(name=f"{item.name}", value=f"{item.price} 골드")
+            for item in data:
+                embed.add_field(name=f"{item[1]['Name']}",
+                                value=f"{item[1]['Stats'][0]['AvgPrice']} 골드\n거래량 {item[1]['Stats'][0]['TradeCount']}개")
 
         await message.channel.send(embed=embed)
 
     async def show_engraved_info(self, message):
         return await self.send_message(message.channel, "현재 이용 불가능")
-
-        data = get_gold_info()
-
-        embed = discord.Embed(
-            title="전설 각인서 시세",
-            url=data.url,
-            color=discord.Color.blue()
-        )
-
-        embed.set_footer(text=data.time + " 기준", icon_url=icon_url)
-
-        engraveds = []
-        for i in range(0, 15):
-            engraveds.append("%02d. " % (i + 1) + str(data.engraveds[i]))
-
-        embed.add_field(name="전각 시세 TOP 1-15", value="\n".join(engraveds))
-
-        options = GoldView(data=data)
-
-        message = await message.channel.send(embed=embed, view=options)
-        options.set_message(message)
 
     async def show_occupation_war_info(self, message):
         embed = discord.Embed(
