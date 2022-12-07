@@ -40,6 +40,7 @@ class DedenneBot(discord.Client):
             if guild.id == 957221859953352725:
                 for channel in guild.text_channels:
                     if "봇" in channel.name or "bot" in channel.name:
+                        self.channel = channel
                         await channel.send("데덴네봇 영업 시작!")
 
         print('Logged on as', self.user)
