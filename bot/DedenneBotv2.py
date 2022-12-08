@@ -4,7 +4,7 @@ from bot.botWorker import *
 from data import *
 from util import parse_json
 
-from lostark import get_character_data, get_mari_shop, get_gold_info, get_engraving_item
+from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news
 from bot.view import *
 
 from . import DBManager
@@ -103,6 +103,9 @@ class DedenneBot(discord.Client):
 
                 elif content == "adventure-island":
                     await self.show_adventure_island_info(message)
+
+                elif content == "news":
+                    await self.show_news(message)
 
                 # 레이드 공략
 
@@ -332,6 +335,32 @@ class DedenneBot(discord.Client):
         embed.add_field(name="등장 시간", value="11:00 / 13:00 / 19:00 / 21:00 / 23:00")
 
         await message.channel.send(embed=embed)
+
+    async def show_news(self, message):
+        data = get_news()
+
+        if data is None:
+            await self.send_specify_message(channel=message.channel, error_name="news_not_found")
+
+        else:
+            embeds = []
+            for news in data:
+                embed = discord.Embed(
+                    title=news["Title"],
+                    url=news["Link"],
+                    color=discord.Color.blue()
+                )
+
+                start_date = news["StartDate"].split("T")[0]
+                end_date = news["EndDate"].split("T")[0]
+
+                embed.set_image(url=news["Thumbnail"])
+                embed.set_footer(text=f"이벤트 기간: {start_date} ~ {end_date}", icon_url=icon_url)
+
+                embeds.append(embed)
+
+            message = await message.channel.send(embeds=embeds)
+            # options.set_message(message)
 
     async def show_argos_solution(self, message):
         embed = discord.Embed(

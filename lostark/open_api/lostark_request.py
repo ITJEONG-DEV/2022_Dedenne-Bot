@@ -176,6 +176,12 @@ def get_engraving_item(item_name):
 
     return contents
 
+def get_news():
+    request_url = main_url + "/news/events"
+
+    response = requests.get(request_url, headers=get_headers())
+
+    return response.json()
 
 if __name__ == "__main__":
     # print(get_headers("D:/2022_Dedenne-Bot/json/info.json"))
