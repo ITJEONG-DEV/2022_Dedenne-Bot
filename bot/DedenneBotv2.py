@@ -359,8 +359,7 @@ class DedenneBot(discord.Client):
 
                 embeds.append(embed)
 
-            message = await message.channel.send(embeds=embeds)
-            # options.set_message(message)
+            await message.channel.send(embeds=embeds)
 
     async def show_argos_solution(self, message):
         embed = discord.Embed(
