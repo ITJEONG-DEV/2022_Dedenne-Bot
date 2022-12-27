@@ -241,27 +241,30 @@ class ProfileEquipment:
         for i in range(len(card_list)):
             card_item = get_bs_object(card_list[i])
 
-            index = card_item.li["data-cardindex"]
+            try:
+                index = card_item.li["data-cardindex"]
 
-            slot = get_bs_object(card_item.find("div", {"class": "card-slot"}))
+                slot = get_bs_object(card_item.find("div", {"class": "card-slot"}))
 
-            grade = slot.div["data-grade"]
-            item_data = slot.div["data-item"]
+                grade = slot.div["data-grade"]
+                item_data = slot.div["data-item"]
 
-            name = get_bs_object(slot.div).find("font").text
+                name = get_bs_object(slot.div).find("font").text
 
-            img = get_bs_object(slot.div).find("img")
-            src = get_bs_object(img).img["src"]
+                img = get_bs_object(slot.div).find("img")
+                src = get_bs_object(img).img["src"]
 
-            card = Card(
-                name=name,
-                index=index,
-                grade=grade,
-                item_data=item_data,
-                src=src
-            )
+                card = Card(
+                    name=name,
+                    index=index,
+                    grade=grade,
+                    item_data=item_data,
+                    src=src
+                )
 
-            self.__card_deck.add_card(card)
+                self.__card_deck.add_card(card)
+            except:
+                print("error")
 
         # effect
         profile_card_text = bs_object.find("div", {"class": "profile-card__content"})

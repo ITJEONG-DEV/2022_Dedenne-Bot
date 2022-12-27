@@ -40,7 +40,7 @@ class DedenneBot(discord.Client):
                 for channel in guild.text_channels:
                     if "봇" in channel.name or "bot" in channel.name:
                         self.channel = channel
-                        # await channel.send("데덴네봇 영업 시작!")
+                        await channel.send("데덴네봇 영업 시작!")
 
         print('Logged on as', self.user)
 
@@ -359,7 +359,12 @@ class DedenneBot(discord.Client):
 
                 embeds.append(embed)
 
-            await message.channel.send(embeds=embeds)
+                if len(embeds) == 10:
+                    await message.channel.send(embeds=embeds)
+                    embeds.clear()
+
+            if len(embeds) > 0:
+                await message.channel.send(embeds=embeds)
 
     async def show_argos_solution(self, message):
         embed = discord.Embed(
