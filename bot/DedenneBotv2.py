@@ -1,10 +1,11 @@
 import datetime
+import json
 
 from bot.botWorker import *
 from data import *
 from util import parse_json
 
-from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news
+from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets
 from bot.view import *
 
 from . import DBManager
@@ -69,22 +70,25 @@ class DedenneBot(discord.Client):
             if command == "m":
                 await self.send_message(message.channel, content)
 
-            elif command == "c":
-                item = Work(
-                    command=content,
-                    contents={
-                        "guild": message.guild,
-                        "channel": message.channel,
-                        "author": message.author,
-                        "message": message.content
-                    }
-                )
-
-                await self.__worker.handle(item)
+            # elif command == "c":
+            #     item = Work(
+            #         command=content,
+            #         contents={
+            #             "guild": message.guild,
+            #             "channel": message.channel,
+            #             "author": message.author,
+            #             "message": message.content
+            #         }
+            #     )
+            #
+            #     await self.__worker.handle(item)
 
             elif command == "l":
                 if content == "search":
                     await self.search_lostark(message)
+
+                elif content == "item":
+                    await self.search_item(message)
 
                 elif content == "mari":
                     await self.show_mari_shop(message)
@@ -196,6 +200,98 @@ class DedenneBot(discord.Client):
             message = await message.channel.send(embed=embed, view=options)
             options.set_message(message)
 
+    def __get_contents(self, text):
+        words = []
+        for word in text.split(">"):
+            if "<" in word:
+                ss = word.split("<")
+                words.append(ss[0])
+                words.append(ss[1])
+            else:
+                words.append(word)
+
+        return " ".join(filter(lambda k: "\n" != k and "&" not in k and "BR" not in k.upper() and "FONT" not in k.upper() and k != "", words)) + "\n"
+
+    async def search_item(self, message):
+        keyword = message.content.split()[-1]
+
+        if keyword == "사용법" or keyword == "방법":
+            embed = discord.Embed(
+                title="아이템 검색 기능 안내",
+                url="https://lostarkcodex.com/kr/search/",
+                color=discord.Color.blue()
+            )
+
+            embed.set_footer(text="2023-01-09 9:30 기준", icon_url=icon_url)
+
+            embed.add_field(name="사용 방법",
+                            value=f"1. 아이템 코드 조회\n`Lost Ark Codex`에서 `원하는 아이템의 ID`를 확인합니다\nhttps://lostarkcodex.com/kr/search/\n\n2. 아이템 시세 조회\n`로아 아이템 '아이템ID'`를 입력하여 시세를 확인합니다\n`ex) 로아 아이템 355530118`")
+
+            await message.channel.send(embed=embed)
+
+            keyword = '355530118'
+
+        if keyword.isnumeric():
+            data = get_markets(int(keyword))
+
+            if data is None:
+                await message.channel.send("해당 아이템은 거래소에서 찾을 수 없습니다")
+
+            else:
+                tool_tip = json.loads(data[0]['ToolTip'])
+
+                embed = discord.Embed(
+                    title=f"아이템 검색 결과",
+                    color=discord.Color.blue()
+                )
+                embed.set_footer(text=f"{datetime.datetime.now().strftime('%Y/%m/%d %H:%M')} 기준", icon_url=icon_url)
+
+                embed.set_image(
+                    url="https://cdn-lostark.game.onstove.com/" + tool_tip["Element_001"]["value"]["slotData"][
+                        "iconPath"])
+
+                s = ""
+                for key in tool_tip.keys():
+                    if tool_tip[key]["type"] == "NameTagBox":
+                        continue
+
+                    elif tool_tip[key]["type"] == "ItemTitle":
+                        s += self.__get_contents(tool_tip[key]["value"]["leftStr0"])
+
+                    elif tool_tip[key]["type"] == "SingleTextBox":
+                        t = tool_tip[key]["value"]
+
+                        content = self.__get_contents(t)
+
+                        if content != "\n" and content != "":
+                            s += self.__get_contents(t)
+
+                    elif tool_tip[key]["type"] == "MultiTextBox":
+                        continue
+
+                    elif tool_tip[key]["type"] == "ItemPartBox":
+                        s += tool_tip[key]["value"]["Element_001"] + "\n"
+
+                    elif tool_tip[key]["type"] == "SymbolString":
+                        s += self.__get_contents(tool_tip[key]["value"]["contentStr"])
+
+                    else:
+                        print("else:: " + tool_tip[key])
+
+                embed.add_field(name=f"{data[0]['Name']} 정보", value=s)
+
+                s = ""
+                for i in range(7):
+                    item = data[0]['Stats'][i]
+                    s += f"{'-'.join(item['Date'].split('-')[1:])}: {item['AvgPrice']} 골드, {item['TradeCount']}개\n"
+
+                embed.add_field(name=f"{data[0]['Name']} 시세", value=s)
+
+                await message.channel.send(embed=embed)
+
+        else:
+            await message.channel.send("잘못된 입력")
+
     async def show_mari_shop(self, message):
         data = get_mari_shop()
 
@@ -248,6 +344,7 @@ class DedenneBot(discord.Client):
 
             "구동": "구슬동자",
             "강무": "강화 무기",
+            "강화무기": "강화 무기",
             "결대": "결투의 대가",
             "극의체술": "극의:",
             "급타": "급소타격",
@@ -256,6 +353,8 @@ class DedenneBot(discord.Client):
             "달소": "달의 소리",
             "달저": "달인의 저력",
             "돌대": "돌격대장",
+            "두동": "두 번째 동료",
+            "두번째동료": "두 번째 동료",
             "마효증": "마나 효율 증가",
             "마흐": "마나의 흐름",
             "부뼈": "부러진 뼈",
@@ -273,6 +372,7 @@ class DedenneBot(discord.Client):
             "절구": "절실한 구원",
             "정단": "정밀 단도",
             "정흡": "정기 흡수",
+            "죽습": "죽음의 습격",
             "중수": "중력 수련",
             "중착": "중갑 착용",
             "진용": "진실된 용맹",
@@ -281,7 +381,7 @@ class DedenneBot(discord.Client):
             "충단": "충격 단련",
             "타대": "타격의 대가",
             "폭전": "폭발물 전문가",
-            "피메": "피스메이커"
+            "피메": "피스메이커",
         }
 
         if keyword in keyword_dict.keys():

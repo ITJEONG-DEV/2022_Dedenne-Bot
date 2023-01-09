@@ -183,11 +183,24 @@ def get_news():
 
     return response.json()
 
+def get_markets(itemId):
+    request_url = main_url + "/markets/items/" + str(itemId)
+
+    response = requests.get(request_url, headers=get_headers())
+
+    return response.json()
+
 if __name__ == "__main__":
     # print(get_headers("D:/2022_Dedenne-Bot/json/info.json"))
 
     # print(get_characters("데덴네귀여워"))
     # print(get_armories("데덴네귀여워"))
-    print(get_engraving_item("소서리스"))
+    # print(get_engraving_item("소서리스"))
+
+    data = get_markets(355530118)
+
+    print(data[0]['ToolTip'].replace("\r",""))
+
+
 
     # print(get_profiles("데덴네귀여워"))
