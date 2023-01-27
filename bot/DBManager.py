@@ -20,8 +20,13 @@ class DBManager:
                 charset="utf8"
             )
 
-        if self.cur is None:
-            self.cur = self.con.cursor(pymysql.cursors.DictCursor)
+    def get_adventure_island_information(self, key):
+        cur = self.con.cursor()
+        sql = f"SELECT `ISLAND`, `REWARD` FROM ADVENTURE_ISLAND WHERE `ID` = {key};"
+        cur.execute(sql)
+        rows = cur.fetchall()
+
+        return rows[0]
 
     def check_duplicate(self, character_name):
         self.connect()

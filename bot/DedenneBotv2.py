@@ -5,7 +5,7 @@ from bot.botWorker import *
 from data import *
 from util import parse_json
 
-from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets
+from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets, get_adventure_island
 from bot.view import *
 
 from . import DBManager
@@ -28,6 +28,7 @@ class DedenneBot(discord.Client):
 
         # db manager
         self.__db = DBManager()
+        self.__db.connect()
 
         self.icon_url = "https://cdn-lostark.game.onstove.com/2018/obt/assets/images/common/icon/favicon-192.png"
 
@@ -423,18 +424,34 @@ class DedenneBot(discord.Client):
         await message.channel.send(embed=embed)
 
     async def show_adventure_island_info(self, message):
+        now = datetime.datetime.now()
+        day = now.weekday()
+        island, reward = self.__db.get_adventure_island_information(now.strftime('%Y%m%d'))
+
+        island = island.split(",")
+        reward = reward.split(",")
+
+        link = ""
+        if day == 5 or day == 6:
+            link = get_adventure_island(island, reward, True)
+        else:
+            link = get_adventure_island(island, reward, False)
+
+
         embed = discord.Embed(
-            title="모험섬 시간",
+            title="모험섬",
             url="https://lostark.game.onstove.com/Library/Tip/Views/138208?page=1&libraryStatusType=0&librarySearchCategory=0&searchtype=0&searchtext=&ordertype=latest&LibraryQaAnswerType=None&UserPageType=0",
             color=discord.Color.blue()
         )
 
         embed.set_footer(text="2021. 7. 10 기준", icon_url=self.icon_url)
+        embed.add_field(name="평일", value="11:00 / 13:00 / 19:00 / 21:00 / 23:00")
+        embed.add_field(name="주말", value="(오전) 09:00 / 11:00 / 13:00\n(오후) 19:00 / 21:00 / 23:00")
 
-        embed.add_field(name="개최 가능 요일", value="목, 금, 토, 일")
-        embed.add_field(name="등장 시간", value="11:00 / 13:00 / 19:00 / 21:00 / 23:00")
-
-        await message.channel.send(embed=embed)
+        if link == "":
+            await message.channel.send(embed=embed)
+        else:
+            await message.channel.send(file=discord.File(link))
 
     async def show_news(self, message):
         data = get_news()
