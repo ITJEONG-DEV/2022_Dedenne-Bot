@@ -21,10 +21,14 @@ class DBManager:
             )
 
     def get_adventure_island_information(self, key):
+        self.connect()
+
         cur = self.con.cursor()
         sql = f"SELECT `ISLAND`, `REWARD` FROM ADVENTURE_ISLAND WHERE `ID` = {key};"
         cur.execute(sql)
         rows = cur.fetchall()
+
+        self.close()
 
         return rows[0]
 

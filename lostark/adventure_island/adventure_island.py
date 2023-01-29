@@ -24,10 +24,10 @@ def get_adventure_island(island, reward, double=False):
         for j in range(2):
             # paste content
             for i in range(3):
-                island_image = Image.open(f'lostark/adventure_island/data/island/{island[i]}.jpg')
+                island_image = Image.open(f'lostark/adventure_island/data/island/{island[i+j*3]}.jpg')
                 island_image = island_image.resize(island_size)
 
-                reward_image = Image.open(f'lostark/adventure_island/data/reward/{reward[i]}.jpg')
+                reward_image = Image.open(f'lostark/adventure_island/data/reward/{reward[i+j*3]}.jpg')
                 reward_image = reward_image.resize(reward_size)
 
                 new_image = Image.new('RGB', content_size)
