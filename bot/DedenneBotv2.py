@@ -1,5 +1,8 @@
 import datetime
 import json
+import os
+
+import imageio as imageio
 
 from bot.botWorker import *
 from data import *
@@ -158,6 +161,40 @@ class DedenneBot(discord.Client):
                 elif content == "illiakan":
                     await self.show_illiakan_info(message)
 
+                # gif
+
+                elif content == "gif":
+                    await self.make_gif(message)
+
+    async def make_gif(self, message):
+        if len(message.attachments) > 0:
+            # parsed option
+            option = message.content.split()
+
+            duration = 0.3
+
+            if len(option) > 1:
+                for i in range(1, len(option)):
+                    word = option[i]
+
+                    if "duration" in word:
+                        duration = float(word.split("=")[1])
+
+            dir_name = f'{message.author.id}_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}'
+
+            os.makedirs(f'result/{dir_name}', exist_ok=True)
+
+            images = []
+            for attachment in message.attachments:
+                filename = f'result/{dir_name}/' + attachment.filename
+                await attachment.save(filename)
+
+                images.append(imageio.imread(filename))
+
+            imageio.mimsave(f'result/{dir_name}/result.gif', images, duration=duration)
+
+            await message.channel.send(file=discord.File(f'result/{dir_name}/result.gif'))
+
     async def search_lostark(self, message):
         keyword = message.content.split()[-1]
         data = get_character_data(character_name=keyword)
@@ -211,7 +248,9 @@ class DedenneBot(discord.Client):
             else:
                 words.append(word)
 
-        return " ".join(filter(lambda k: "\n" != k and "&" not in k and "BR" not in k.upper() and "FONT" not in k.upper() and k != "", words)) + "\n"
+        return " ".join(filter(
+            lambda k: "\n" != k and "&" not in k and "BR" not in k.upper() and "FONT" not in k.upper() and k != "",
+            words)) + "\n"
 
     async def search_item(self, message):
         keyword = message.content.split()[-1]
@@ -436,7 +475,6 @@ class DedenneBot(discord.Client):
             link = get_adventure_island(island, reward, True)
         else:
             link = get_adventure_island(island, reward, False)
-
 
         embed = discord.Embed(
             title="모험섬",
