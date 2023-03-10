@@ -7,10 +7,13 @@ main_url = "https://developer-lostark.game.onstove.com"
 
 
 # Get info
-def get_headers(json_link="D:/2022_Dedenne-Bot/json/info.json"):
+def get_GET_headers(json_link="D:/2022_Dedenne-Bot/json/info.json"):
     authorization = parse_json(json_link)["lostark"]["apikeyauth"]
     return {'accept': 'application/json', 'authorization': authorization}
 
+def get_POST_headers(json_link="D:/2022_Dedenne-Bot/json/info.json"):
+    authorization = parse_json(json_link)["lostark"]["apikeyauth"]
+    return {'accept': 'application/json', 'authorization': authorization, 'Content-Type': 'application/json'}
 
 def get_engraving_info(json_link="D:/2022_Dedenne-Bot/json/engraves.json"):
     return parse_json(json_link)
@@ -19,70 +22,70 @@ def get_engraving_info(json_link="D:/2022_Dedenne-Bot/json/engraves.json"):
 # GET apis
 def get_characters(character_name):
     request_url = main_url + "/characters/" + character_name + "/siblings"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_profiles(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/profiles"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_equipment(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/equipment"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_avatars(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/avatars"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_combat_skiils(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/combat-skills"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_engravings(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/engravings"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_cards(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/cards"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_gems(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/gems"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_colosseums(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/colosseums"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
 
 def get_collectibles(character_name):
     request_url = main_url + "/armories/characters/" + character_name + "/collectibles"
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
 
@@ -170,37 +173,96 @@ def get_engraving_item(item_name):
 
     contents = []
     for item_id in item_ids:
-        response = requests.get(request_url + str(item_id), headers=get_headers())
+        response = requests.get(request_url + str(item_id), headers=get_GET_headers())
 
         contents.append(response.json())
 
     return contents
 
+
 def get_news():
     request_url = main_url + "/news/events"
 
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
+
 
 def get_markets(itemId):
     request_url = main_url + "/markets/items/" + str(itemId)
 
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
+
 
 def get_challenge_abyss_dungeons():
     request_url = main_url + "/gamecontents/challenge-abyss-dungeons"
 
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
 
     return response.json()
+
 
 def get_challenge_guardian_raids():
     request_url = main_url + "/gamecontents/challenge-guardian-raids"
 
-    response = requests.get(request_url, headers=get_headers())
+    response = requests.get(request_url, headers=get_GET_headers())
+
+    return response.json()
+
+
+def get_callendar():
+    request_url = main_url + "/gamecontents/calendar"
+
+    response = requests.get(request_url, headers=get_GET_headers())
+
+    dict = {}
+
+    for item in response.json():
+        key = item["CategoryName"]
+
+        if key not in dict.keys():
+            dict[key] = []
+
+        dict[key].append(item)
+
+    return dict
+
+
+def get_gems(name="7레벨 홍염의 보석", character_class=""):
+    data_dict = {}
+
+    data_dict["ItemLevelMin"] = 0
+    data_dict["ItemLevelMax"] = 0
+    data_dict["ItemGradeQuality"] = 0
+
+    data_dict["SkillOptions"] = [{}]
+    data_dict["SkillOptions"][0]["FirstOption"] = None
+    data_dict["SkillOptions"][0]["SecondOption"] = None
+    data_dict["SkillOptions"][0]["MinValue"] = None
+    data_dict["SkillOptions"][0]["MaxValue"] = None
+
+    data_dict["EtcOptions"] = [{}]
+    data_dict["EtcOptions"][0]["FirstOption"] = None
+    data_dict["EtcOptions"][0]["SecondOption"] = None
+    data_dict["EtcOptions"][0]["MinValue"] = None
+    data_dict["EtcOptions"][0]["MaxValue"] = None
+
+    data_dict["Sort"] = "BUY_PRICE"
+    data_dict["CategoryCode"] = 210000
+    data_dict["CharacterClass"] = character_class
+    data_dict["ItemTier"] = 3
+    data_dict["ItemGrade"] = ""
+    data_dict["ItemName"] = name
+    data_dict["PageNo"] = 0
+    data_dict["SortCondition"] = "ASC"
+
+    data = json.dumps(data_dict)
+
+    request_url = main_url + "/auctions/items"
+
+    response = requests.post(request_url, headers=get_POST_headers(), data=data)
 
     return response.json()
 
@@ -216,8 +278,14 @@ if __name__ == "__main__":
 
     # print(data[0]['ToolTip'].replace("\r",""))
 
-    print(get_challenge_guardian_raids())
+    # data = get_callendar()
 
+    # print(get_callendar().keys())
+    # print(len(data["모험 섬"]))
 
+    # import datetime
+    # print(datetime.datetime.strptime("2023-03-11", "%Y-%m-%d"))
+
+    print(get_gems())
 
     # print(get_profiles("데덴네귀여워"))

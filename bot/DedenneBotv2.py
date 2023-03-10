@@ -9,7 +9,7 @@ from data import *
 from util import parse_json
 
 from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets, get_adventure_island, \
-    get_challenge_abyss_dungeons, get_challenge_guardian_raids
+    get_challenge_abyss_dungeons, get_challenge_guardian_raids, get_callendar, get_gems
 from bot.view import *
 
 from . import DBManager
@@ -97,6 +97,9 @@ class DedenneBot(discord.Client):
 
                 elif content == "item":
                     await self.search_item(message)
+
+                elif content == "gem":
+                    await self.search_gem(message)
 
                 elif content == "mari":
                     await self.show_mari_shop(message)
@@ -186,7 +189,6 @@ class DedenneBot(discord.Client):
 
             await message.channel.send(content)
 
-
     async def make_gif(self, message):
         if len(message.attachments) > 0:
             # parsed option
@@ -266,6 +268,9 @@ class DedenneBot(discord.Client):
         else:
             await message.channel.send("정보를 조회할 수 없습니다.")
 
+    async def show_calendar(self, message):
+        data = get_callendar()
+
     async def search_lostark(self, message):
         keyword = message.content.split()[-1]
         data = get_character_data(character_name=keyword)
@@ -322,6 +327,53 @@ class DedenneBot(discord.Client):
         return " ".join(filter(
             lambda k: "\n" != k and "&" not in k and "BR" not in k.upper() and "FONT" not in k.upper() and k != "",
             words)) + "\n"
+
+    async def search_gem(self, message):
+        # 보석 7
+        # 보석 7홍
+        # 보석 7 바드
+        words = message.content.split()
+
+        item_name = ""
+        class_name = ""
+
+        if len(words) >= 2:
+            item_name = words[1]
+
+            if "홍" in item_name:
+                item_name = item_name[:-1] + "레벨 홍염의 보석"
+                # item_name.replace("홍", "레벨 홍염의 보석")
+            elif "멸" in item_name:
+                item_name = item_name[:-1] + "레벨 멸화의 보석"
+                # item_name.replace("멸", "레벨 멸화의 보석")
+            else:
+                item_name += "레벨"
+
+        if len(words) >= 3:
+            class_name = words[2]
+
+        result_items = get_gems(item_name, class_name)["Items"]
+
+        if result_items:
+            image_url = result_items[0]["Icon"]
+
+            embed = discord.Embed(
+                title=f"{item_name} 검색 결과",
+                color=discord.Color.blue()
+            )
+            embed.set_footer(text=f"{datetime.datetime.now()} 기준", icon_url=icon_url)
+            embed.set_thumbnail(url=image_url)
+
+            str_field = ""
+            for item in result_items:
+                str_field += f'{item["Name"]} {item["AuctionInfo"]["BuyPrice"]}골드\n'
+
+            embed.add_field(name="매물", value=str_field)
+
+            await message.channel.send(embed=embed)
+
+        else:
+            await message.channel.send(f"{' '.join(words[1:])}에 해당하는 매물이 없어요")
 
     async def search_item(self, message):
         keyword = message.content.split()[-1]
