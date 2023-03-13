@@ -1,1 +1,0 @@
-from .GoldInfo import GoldInfo
