@@ -3,6 +3,9 @@ import discord
 from bot.DedenneBotv2 import DedenneBot
 from util import parse_json
 
+import os
+path = os.path.dirname(os.path.abspath(__file__))
+print(path)
 
 my_intents = discord.Intents.default()
 my_intents.message_content = True

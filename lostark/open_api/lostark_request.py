@@ -1,22 +1,25 @@
 import urllib.parse
+import os
 
 from util import *
 import requests
 
+path = os.path.dirname(os.path.abspath(__file__))
 main_url = "https://developer-lostark.game.onstove.com"
 
 
 # Get info
-def get_GET_headers(json_link="D:/2022_Dedenne-Bot/json/info.json"):
-    authorization = parse_json(json_link)["lostark"]["apikeyauth"]
+def get_GET_headers(json_link="/json/info.json"):
+
+    authorization = parse_json(path+json_link)["lostark"]["apikeyauth"]
     return {'accept': 'application/json', 'authorization': authorization}
 
-def get_POST_headers(json_link="D:/2022_Dedenne-Bot/json/info.json"):
-    authorization = parse_json(json_link)["lostark"]["apikeyauth"]
+def get_POST_headers(json_link="/json/info.json"):
+    authorization = parse_json(path+json_link)["lostark"]["apikeyauth"]
     return {'accept': 'application/json', 'authorization': authorization, 'Content-Type': 'application/json'}
 
-def get_engraving_info(json_link="D:/2022_Dedenne-Bot/json/engraves.json"):
-    return parse_json(json_link)
+def get_engraving_info(json_link="/json/engraves.json"):
+    return parse_json(path+json_link)
 
 
 # GET apis
