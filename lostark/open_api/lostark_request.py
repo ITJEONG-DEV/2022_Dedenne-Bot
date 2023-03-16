@@ -157,7 +157,7 @@ def get_item_id(keyword):
         "타대": "타격의 대가",
         "폭전": "폭발물 전문가",
         "피메": "피스메이커",
-        "핸건": "핸드 거너"
+        "핸건": "핸드거너"
     }
 
     if keyword in keyword_dict.keys():
