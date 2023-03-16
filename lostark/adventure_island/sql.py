@@ -1,12 +1,20 @@
 import os
+import platform
 
 import pymysql
 
 from util import parse_json
 
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
-key = parse_json(path + "/json/info.json")
+key = None
 
+if "Window" in platform.platform():
+    path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    dir_name = path + "\\json\\info.json"
+    print(dir_name)
+    key = parse_json(dir_name)
+else:
+    key = parse_json(path + "/data/info.json")
 
 def connect():
     mysql = key["mysql"]
@@ -253,21 +261,47 @@ def get_adventure_island_reward_info(date, time):
 
             result = list(result)
 
-            result = sorted(result, key=lambda x: grade_rank[x[1]])
-
-            reward_dict[name] = [item for item in result]
-
             # 고정 보상 추가
             sql = f"SELECT `REWARD_NAME_`, `ITEM_GRADE_` FROM `ISLAND_REWARD_CONST` WHERE `ISLAND_NAME_` = '{name}';"
             cur.execute(sql)
-            result = cur.fetchall()
+            result2 = cur.fetchall()
 
-            for item in result:
-                reward_dict[name].append(item)
+            for item in result2:
+                result.append(item)
+
+            result = sorted(result, key=lambda x: grade_rank[x[1]])
 
             # 중복체크
-            if reward_dict[name].count(('실링', '일반')) == 2:
-                reward_dict[name].remove(('실링', '일반'))
+            if result.count(('실링', '일반')) == 2:
+                result.remove(('실링', '일반'))
+
+            # 골드 섬
+            if result.count(('골드', '일반')) > 0:
+                item = result.pop(result.index(('골드', '일반')))
+                result.insert(0, item)
+
+            # 카드 섬
+            elif result.count(('전설 ~ 고급 카드 팩', '전설')) > 0:
+                item = result.pop(result.index(('전설 ~ 고급 카드 팩', '전설')))
+                result.insert(0, item)
+
+                item = result.pop(result.index(('영혼의 잎사귀', '고급')))
+                result.insert(1, item)
+
+            # 주화 섬
+            elif result.count(('대양의 주화 상자', '영웅')) > 0:
+                item = result.pop(result.index(('대양의 주화 상자', '영웅')))
+                result.insert(0, item)
+            elif result.count(('해적 주화', '일반')) > 0:
+                item = result.pop(result.index(('해적 주화', '일반')))
+                result.insert(0, item)
+
+            # 실링 섬
+            elif result.count(('실링', '일반')) > 0:
+                item = result.pop(result.index(('실링', '일반')))
+                result.insert(0, item)
+
+            reward_dict[name] = result
 
         return list(reward_dict.items())
 

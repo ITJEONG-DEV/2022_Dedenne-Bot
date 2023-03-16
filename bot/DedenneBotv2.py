@@ -467,16 +467,12 @@ class DedenneBot(discord.Client):
     async def show_adventure_island_info(self, message):
         now = datetime.datetime.now()
         day = now.weekday()
-        island, reward = self.__db.get_adventure_island_information(now.strftime('%Y%m%d'))
-
-        island = island.split(",")
-        reward = reward.split(",")
 
         link = ""
-        if day == 5 or day == 6:
-            link = get_adventure_island(island, reward, True)
+        if day >= 5:
+            link = get_adventure_island(now.strftime("%Y-%m-%d"), True)
         else:
-            link = get_adventure_island(island, reward, False)
+            link = get_adventure_island(now.strftime("%Y-%m-%d"), False)
 
         embed = discord.Embed(
             title="모험섬",
