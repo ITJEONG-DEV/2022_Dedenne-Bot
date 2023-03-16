@@ -1560,3 +1560,22 @@ aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host gateway-u
 [2023-03-16 10:20:30] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session bfc3b86dd41f9db63a4d88f71622eb56.
 [2023-03-16 12:39:47] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session bfc3b86dd41f9db63a4d88f71622eb56.
 [2023-03-16 12:43:55] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session bfc3b86dd41f9db63a4d88f71622eb56.
+[2023-03-16 14:19:18] [INFO    ] discord.gateway: Shard ID None has successfully RESUMED session bfc3b86dd41f9db63a4d88f71622eb56.
+Traceback (most recent call last):
+  File "dedenne_run.py", line 3, in <module>
+    from bot.DedenneBotv2 import DedenneBot
+  File "/home/itjeong/2022_Dedenne-Bot/bot/__init__.py", line 2, in <module>
+    from .DedenneBotv2 import DedenneBot
+  File "/home/itjeong/2022_Dedenne-Bot/bot/DedenneBotv2.py", line 9, in <module>
+    from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets, get_adventure_island, \
+  File "/home/itjeong/2022_Dedenne-Bot/lostark/__init__.py", line 1, in <module>
+    from .adventure_island import get_adventure_island
+  File "/home/itjeong/2022_Dedenne-Bot/lostark/adventure_island/__init__.py", line 1, in <module>
+    from .adventure_island import get_adventure_island
+  File "/home/itjeong/2022_Dedenne-Bot/lostark/adventure_island/adventure_island.py", line 4, in <module>
+    from .sql import *
+  File "/home/itjeong/2022_Dedenne-Bot/lostark/adventure_island/sql.py", line 17, in <module>
+    key = parse_json(path + "/data/info.json")
+  File "/home/itjeong/2022_Dedenne-Bot/util.py", line 5, in parse_json
+    with open(url, "r", encoding="UTF-8") as json_txt:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/itjeong/2022_Dedenne-Bot/lostark/adventure_island/../../data/info.json'

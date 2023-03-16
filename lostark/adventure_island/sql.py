@@ -5,7 +5,7 @@ import pymysql
 
 from util import parse_json
 
-path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+path = ""
 key = None
 
 if "Window" in platform.platform():
@@ -14,7 +14,8 @@ if "Window" in platform.platform():
     print(dir_name)
     key = parse_json(dir_name)
 else:
-    key = parse_json(path + "/data/info.json")
+    path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    key = parse_json(path + "/json/info.json")
 
 def connect():
     mysql = key["mysql"]
