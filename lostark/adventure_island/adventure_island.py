@@ -10,7 +10,7 @@ import platform
 import datetime
 import requests
 
-global font_dir, title_font, time_font, island_font
+global font_dir, title_font, time_font, island_font, island_type_font
 
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 current_os = "Linux"
@@ -23,6 +23,7 @@ if "Linux" in platform.platform():
     title_font = ImageFont.truetype(ttf_files[-4], size=40)
     time_font = ImageFont.truetype(ttf_files[-1], size=32)
     island_font = ImageFont.truetype(ttf_files[-1], size=28)
+    island_type_font = ImageFont.truetype(ttf_files[-4], size=28)
 elif "Window" in platform.platform():
     current_os = "window"
 
@@ -31,7 +32,8 @@ elif "Window" in platform.platform():
     time_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHIC.TTF", size=32)
     island_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHIC.TTF",
                                      size=28)
-
+    island_type_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHICBOLD.TTF",
+                                     size=28)
 
 # print(ttf_files)
 
@@ -260,9 +262,9 @@ def make_island_box(island: str, rewards: [], grades: []):
     else:
         island_type = "일반섬"
 
-    _w, _h = drawable_image.textsize(island_type, font=island_font)
+    _w, _h = drawable_image.textsize(island_type, font=island_type_font)
     x, y = icon_size[0] + icon_gap * 4 + margin, (height - _h) / 2
-    drawable_image.text((x, y), island_type, fill=title_color, font=island_font)
+    drawable_image.text((x, y), island_type, fill=title_color, font=island_type_font)
 
     # text ( island_name )
     w, h = drawable_image.textsize(island, font=island_font)
