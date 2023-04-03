@@ -169,6 +169,8 @@ cython_debug/
 *.part
 *.webm
 *.html
-*.jpg
+screenshots/
+adventure_island/
+# *.jpg
 
 result/

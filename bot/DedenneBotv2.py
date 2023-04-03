@@ -10,6 +10,8 @@ from lostark import get_character_data, get_mari_shop, get_engraving_item, get_n
     get_challenge_abyss_dungeons, get_challenge_guardian_raids, get_callendar, get_gems
 from bot.view import *
 
+import random
+
 from . import DBManager
 
 import discord
@@ -18,6 +20,35 @@ KOREA = datetime.timezone(datetime.timedelta(hours=9))
 
 ready = False
 
+on_ads = True
+
+
+async def send_message(channel, message=None, file=None, embeds=None, embed=None, view=None):
+    _ = await channel.send(content=message, file=file, embeds=embeds, embed=embed, view=view)
+
+    if on_ads:
+        index = random.randint(1, 2)
+
+        if index == 1:
+            embed = discord.Embed(
+                title=f"짱바드 16층 입성 기념 광고",
+                color=discord.Color.blue()
+            )
+            file = discord.File(f'ads/{index}.jpg')
+            embed.set_image(url=f'attachment://{index}.jpg')
+            embed.set_footer(text="도찬빈 제작")
+            await channel.send(file=file, embed=embed)
+        else:
+            embed = discord.Embed(
+                title=f"짱바드 강길마 16층 달성 기념 광고",
+                color=discord.Color.blue()
+            )
+            file = discord.File(f'ads/{index}.jpg')
+            embed.set_image(url=f'attachment://{index}.jpg')
+            embed.set_footer(text="데.귀 제작")
+            await channel.send(file=file, embed=embed)
+
+    return _
 
 class DedenneBot(discord.Client):
     async def on_ready(self):
@@ -68,7 +99,7 @@ class DedenneBot(discord.Client):
             content = words[1]
 
             if command == "m":
-                await self.send_message(message.channel, content)
+                await send_message(message.channel, content)
 
             elif command == "l":
                 # 도움말
@@ -123,7 +154,7 @@ class DedenneBot(discord.Client):
         with open("./json/help.txt", "r", encoding='utf-8') as txt:
             content = txt.read()
 
-            await message.channel.send(content)
+            await send_message(channel=message.channel, message=content)
 
     async def make_gif(self, message):
         if len(message.attachments) > 0:
@@ -152,7 +183,7 @@ class DedenneBot(discord.Client):
 
             imageio.mimsave(f'result/{dir_name}/result.gif', images, duration=duration)
 
-            await message.channel.send(file=discord.File(f'result/{dir_name}/result.gif'))
+            await send_message(message.channel, file=discord.File(f'result/{dir_name}/result.gif'))
 
     async def show_challenge_abyss_dungeons(self, message):
         response = get_challenge_abyss_dungeons()
@@ -175,9 +206,9 @@ class DedenneBot(discord.Client):
             embeds.append(embed)
 
         if len(embeds) > 0:
-            await message.channel.send(embeds=embeds)
+            await send_message(message.channel, embeds=embeds)
         else:
-            await message.channel.send("정보를 조회할 수 없습니다.")
+            await send_message(message.channel, message="정보를 조회할 수 없습니다.")
 
     async def show_challenge_guardian_raids(self, message):
         response = get_challenge_guardian_raids()
@@ -200,9 +231,9 @@ class DedenneBot(discord.Client):
             embeds.append(embed)
 
         if len(embeds) > 0:
-            await message.channel.send(embeds=embeds)
+            await send_message(message.channel, embeds=embeds)
         else:
-            await message.channel.send("정보를 조회할 수 없습니다.")
+            await send_message(message.channel, message="정보를 조회할 수 없습니다.")
 
     async def show_calendar(self, message):
         data = get_callendar()
@@ -247,7 +278,7 @@ class DedenneBot(discord.Client):
 
             options = CharacterView(data=data)
 
-            message = await message.channel.send(embed=embed, view=options)
+            message = await send_message(message.channel, embed=embed, view=options)
             options.set_message(message)
 
     def __get_contents(self, text):
@@ -306,10 +337,10 @@ class DedenneBot(discord.Client):
 
             embed.add_field(name="매물", value=str_field)
 
-            await message.channel.send(embed=embed)
+            await send_message(message.channel, embed=embed)
 
         else:
-            await message.channel.send(f"{' '.join(words[1:])}에 해당하는 매물이 없어요")
+            await send_message(message.channel, message=f"{' '.join(words[1:])}에 해당하는 매물이 없어요")
 
     async def search_item(self, message):
         keyword = message.content.split()[-1]
@@ -326,7 +357,7 @@ class DedenneBot(discord.Client):
             embed.add_field(name="사용 방법",
                             value=f"1. 아이템 코드 조회\n`Lost Ark Codex`에서 `원하는 아이템의 ID`를 확인합니다\nhttps://lostarkcodex.com/kr/search/\n\n2. 아이템 시세 조회\n`로아 아이템 '아이템ID'`를 입력하여 시세를 확인합니다\n`ex) 아이템 검색 355530118`")
 
-            await message.channel.send(embed=embed)
+            await send_message(message.channel, embed=embed)
 
             keyword = '355530118'
 
@@ -334,7 +365,7 @@ class DedenneBot(discord.Client):
             data = get_markets(int(keyword))
 
             if data is None:
-                await message.channel.send("해당 아이템은 거래소에서 찾을 수 없습니다")
+                await send_message(message.channel, message="해당 아이템은 거래소에서 찾을 수 없습니다")
 
             else:
                 tool_tip = json.loads(data[0]['ToolTip'])
@@ -386,10 +417,10 @@ class DedenneBot(discord.Client):
 
                 embed.add_field(name=f"{data[0]['Name']} 시세", value=s)
 
-                await message.channel.send(embed=embed)
+                await send_message(message.channel, embed=embed)
 
         else:
-            await message.channel.send("잘못된 입력")
+            await send_message(message.channel, message="잘못된 입력")
 
     async def show_mari_shop(self, message):
         data = get_mari_shop()
@@ -423,11 +454,11 @@ class DedenneBot(discord.Client):
 
         options = MariShopView(data=data)
 
-        message = await message.channel.send(embed=embed, view=options)
+        message = await send_message(message.channel, embed=embed, view=options)
         options.set_message(message)
 
     async def show_gold_info(self, message):
-        return await self.send_message(message.channel, "현재 이용 불가능")
+        return await send_message(message.channel, "현재 이용 불가능")
 
     async def show_search_engraved_info(self, message):
         keyword = message.content.split()[-1]
@@ -448,7 +479,7 @@ class DedenneBot(discord.Client):
                 embed.add_field(name=f"{item[1]['Name']}",
                                 value=f"{item[1]['Stats'][0]['AvgPrice']} 골드\n거래량 {item[1]['Stats'][0]['TradeCount']}개")
 
-        await message.channel.send(embed=embed)
+        await send_message(message.channel, embed=embed)
 
     async def show_occupation_war_info(self, message):
         embed = discord.Embed(
@@ -462,7 +493,7 @@ class DedenneBot(discord.Client):
         embed.add_field(name="개최 가능 요일", value="목, 금, 토, 일")
         embed.add_field(name="참여 가능 시간", value="12:30 / 16:30 / 18:30 / 19:30 / 22:30 / 23:30")
 
-        await message.channel.send(embed=embed)
+        await send_message(message.channel, embed=embed)
 
     async def show_adventure_island_info(self, message):
         now = datetime.datetime.now()
@@ -485,9 +516,9 @@ class DedenneBot(discord.Client):
         embed.add_field(name="주말", value="(오전) 09:00 / 11:00 / 13:00\n(오후) 19:00 / 21:00 / 23:00")
 
         if link == "":
-            await message.channel.send(embed=embed)
+            await send_message(message.channel, embed=embed)
         else:
-            await message.channel.send(file=discord.File(link))
+            await send_message(message.channel, file=discord.File(link))
 
     async def show_news(self, message):
         data = get_news()
@@ -513,11 +544,11 @@ class DedenneBot(discord.Client):
                 embeds.append(embed)
 
                 if len(embeds) == 10:
-                    await message.channel.send(embeds=embeds)
+                    await send_message(message.channel, embeds=embeds)
                     embeds.clear()
 
             if len(embeds) > 0:
-                await message.channel.send(embeds=embeds)
+                await send_message(message.channel, embeds=embeds)
 
     async def send_specify_message(self, channel, error_name: str, name: str = ""):
         words = self.__error_messages[error_name]
@@ -531,10 +562,7 @@ class DedenneBot(discord.Client):
 
             message += " "
 
-        await self.send_message(channel, message)
-
-    async def send_message(self, channel, contents):
-        await channel.send(contents)
+        await send_message(channel, message)
 
     def __get_return_words(self, message):
         for item in self.__words["words"]:
