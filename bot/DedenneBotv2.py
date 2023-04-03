@@ -23,32 +23,62 @@ ready = False
 on_ads = True
 
 
-async def send_message(channel, message=None, file=None, embeds=None, embed=None, view=None):
-    _ = await channel.send(content=message, file=file, embeds=embeds, embed=embed, view=view)
+async def send_message(channel, message=None, file=None, embeds=None, embed=None, view=None, ads=False):
+    if ads:
+        embeds = []
+        files = []
+        for i in range(0, 2):
+            if i == 0:
+                embed = discord.Embed(
+                    title=f"짱바드 16층 입성 기념 광고",
+                    color=discord.Color.blue()
+                )
+                file = discord.File(f'ads/{1}.jpg')
+                embed.set_image(url=f'attachment://{1}.jpg')
+                embed.set_footer(text="도찬빈 제작")
 
-    if on_ads:
-        index = random.randint(1, 2)
+            elif i == 1:
+                embed = discord.Embed(
+                    title=f"짱바드 강길마 16층 달성 기념 광고",
+                    color=discord.Color.blue()
+                )
+                file = discord.File(f'ads/{2}.jpg')
+                embed.set_image(url=f'attachment://{2}.jpg')
+                embed.set_footer(text="데.귀 제작")
 
-        if index == 1:
-            embed = discord.Embed(
-                title=f"짱바드 16층 입성 기념 광고",
-                color=discord.Color.blue()
-            )
-            file = discord.File(f'ads/{index}.jpg')
-            embed.set_image(url=f'attachment://{index}.jpg')
-            embed.set_footer(text="도찬빈 제작")
-            await channel.send(file=file, embed=embed)
-        else:
-            embed = discord.Embed(
-                title=f"짱바드 강길마 16층 달성 기념 광고",
-                color=discord.Color.blue()
-            )
-            file = discord.File(f'ads/{index}.jpg')
-            embed.set_image(url=f'attachment://{index}.jpg')
-            embed.set_footer(text="데.귀 제작")
-            await channel.send(file=file, embed=embed)
+            embeds.append(embed)
+            files.append(file)
 
-    return _
+        await channel.send(files=files, embeds=embeds)
+
+
+    else:
+        _ = await channel.send(content=message, file=file, embeds=embeds, embed=embed, view=view)
+
+        if on_ads:
+            index = random.randint(1, 2)
+
+            if index == 1:
+                embed = discord.Embed(
+                    title=f"짱바드 16층 입성 기념 광고",
+                    color=discord.Color.blue()
+                )
+                file = discord.File(f'ads/{index}.jpg')
+                embed.set_image(url=f'attachment://{index}.jpg')
+                embed.set_footer(text="도찬빈 제작")
+                await channel.send(file=file, embed=embed)
+            else:
+                embed = discord.Embed(
+                    title=f"짱바드 강길마 16층 달성 기념 광고",
+                    color=discord.Color.blue()
+                )
+                file = discord.File(f'ads/{index}.jpg')
+                embed.set_image(url=f'attachment://{index}.jpg')
+                embed.set_footer(text="데.귀 제작")
+                await channel.send(file=file, embed=embed)
+
+        return _
+
 
 class DedenneBot(discord.Client):
     async def on_ready(self):
@@ -149,6 +179,9 @@ class DedenneBot(discord.Client):
                 # 도가토
                 elif content == "challenge-guardian-raids":
                     await self.show_challenge_guardian_raids(message)
+
+                elif content == "ads":
+                    await send_message(message.channel, ads=True)
 
     async def send_help_message(self, message):
         with open("./json/help.txt", "r", encoding='utf-8') as txt:
