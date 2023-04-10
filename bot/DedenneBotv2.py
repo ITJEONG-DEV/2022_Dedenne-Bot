@@ -7,7 +7,7 @@ import imageio as imageio
 from util import parse_json
 
 from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets, get_adventure_island, \
-    get_challenge_abyss_dungeons, get_challenge_guardian_raids, get_callendar, get_gems
+    get_challenge_abyss_dungeons, get_challenge_guardian_raids, get_callendar, get_gems, parse_adventure_island
 from bot.view import *
 
 import random
@@ -89,6 +89,8 @@ class DedenneBot(discord.Client):
         # db manager
         self.__db = DBManager()
         self.__db.connect()
+
+        self.info = parse_json("./json/info.json")
 
         self.icon_url = "https://cdn-lostark.game.onstove.com/2018/obt/assets/images/common/icon/favicon-192.png"
 
@@ -529,6 +531,8 @@ class DedenneBot(discord.Client):
         await send_message(message.channel, embed=embed)
 
     async def show_adventure_island_info(self, message):
+        parse_adventure_island(authorization=self.info['lostark']['apikeyauth'])
+
         now = datetime.datetime.now()
         day = now.weekday()
 
