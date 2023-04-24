@@ -30,21 +30,21 @@ async def send_message(channel, message=None, file=None, embeds=None, embed=None
         for i in range(0, 2):
             if i == 0:
                 embed = discord.Embed(
-                    title=f"짱바드 16층 입성 기념 광고",
+                    title=f"모코콩 4종",
                     color=discord.Color.blue()
                 )
                 file = discord.File(f'ads/{1}.jpg')
                 embed.set_image(url=f'attachment://{1}.jpg')
-                embed.set_footer(text="도찬빈 제작")
+                embed.set_footer(text="찍은사람: 허니퓨")
 
             elif i == 1:
                 embed = discord.Embed(
-                    title=f"짱바드 강길마 16층 달성 기념 광고",
+                    title=f"잘생긴 헌터즈",
                     color=discord.Color.blue()
                 )
                 file = discord.File(f'ads/{2}.jpg')
                 embed.set_image(url=f'attachment://{2}.jpg')
-                embed.set_footer(text="데.귀 제작")
+                embed.set_footer(text="찍은사람: 데.귀")
 
             embeds.append(embed)
             files.append(file)
