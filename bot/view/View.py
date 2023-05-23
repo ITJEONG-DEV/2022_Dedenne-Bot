@@ -57,7 +57,7 @@ class CharacterView(DefaultView):
         await self.message.edit(embed=embed)
         await interaction.response.defer()
 
-    @discord.ui.button(label="세트 효과 정보", style=discord.ButtonStyle.grey, emoji="📄")
+    @discord.ui.button(label="장비/ 카드 세트 정보", style=discord.ButtonStyle.grey, emoji="📄")
     async def on_click_set_effect(self, interaction: discord.Interaction, button: discord.ui.Button):
         embed = discord.Embed(
             title=self.data.name + "@" + self.data.server + " " + self.data.lv,
