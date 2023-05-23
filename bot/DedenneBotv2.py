@@ -20,7 +20,7 @@ KOREA = datetime.timezone(datetime.timedelta(hours=9))
 
 ready = False
 
-on_ads = True
+on_ads = False
 
 
 async def send_message(channel, message=None, file=None, embeds=None, embed=None, view=None, ads=False):
@@ -50,7 +50,6 @@ async def send_message(channel, message=None, file=None, embeds=None, embed=None
             files.append(file)
 
         await channel.send(files=files, embeds=embeds)
-
 
     else:
         _ = await channel.send(content=message, file=file, embeds=embeds, embed=embed, view=view)
