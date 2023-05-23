@@ -7,7 +7,8 @@ import imageio as imageio
 from util import parse_json
 
 from lostark import get_character_data, get_mari_shop, get_engraving_item, get_news, get_markets, get_adventure_island, \
-    get_challenge_abyss_dungeons, get_challenge_guardian_raids, get_callendar, get_gems, parse_adventure_island
+    get_challenge_abyss_dungeons, get_challenge_guardian_raids, get_callendar, get_gems, parse_adventure_island, \
+    get_character_info
 from bot.view import *
 
 import random
@@ -17,6 +18,7 @@ from . import DBManager
 import discord
 
 KOREA = datetime.timezone(datetime.timedelta(hours=9))
+file_dir = f"{os.path.dirname(os.path.dirname(os.path.abspath(__file__)))}\\lostark\\adventure_island\\date.txt"
 
 ready = False
 
@@ -534,7 +536,18 @@ class DedenneBot(discord.Client):
         await send_message(message.channel, embed=embed)
 
     async def show_adventure_island_info(self, message):
-        parse_adventure_island(authorization=self.info['lostark']['apikeyauth'])
+        difference = 0
+        with open(file_dir, "r") as data:
+            date = data.read()
+            date = datetime.datetime.strptime(date, "%Y-%m-%d")
+
+            difference = datetime.datetime.now() - date
+
+        if difference.days >= 1:
+            parse_adventure_island(authorization=self.info['lostark']['apikeyauth'])
+
+            with open(file_dir, "w") as data:
+                data.write(datetime.datetime.now().strftime("%Y-%m-%d"))
 
         now = datetime.datetime.now()
         day = now.weekday()
