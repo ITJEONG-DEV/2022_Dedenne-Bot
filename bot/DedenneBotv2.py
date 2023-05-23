@@ -115,8 +115,12 @@ class DedenneBot(discord.Client):
             return
 
         # '봇' 또는 'bot' 이 포함된 채널에만 반응
-        if "봇" not in message.channel.name and "bot" not in message.channel.name:
-            return
+        if message.guild.id == 957221859953352725:
+            if "봇" not in message.channel.name and "bot" not in message.channel.name:
+                return
+        else:
+            if "데덴네" not in message.channel.name:
+                return
 
         if message.author == self.user:
             return
