@@ -82,12 +82,14 @@ class ProfileEquipment:
 
                 data = script["Equip"][item_data]
 
+
                 # set name
                 top_str = data["Element_009"]["value"]["Element_000"]["topStr"]
                 set_name = get_bs_object(top_str).find("font").text
 
                 # set effect
                 set_effect_obj = data["Element_009"]["value"]
+
                 for item in set_effect_obj.items():
                     content = item[1]["topStr"]
                     name = " ".join(get_bs_object(content).find("font").text.split("[")[0].split(" ")[:-1])
@@ -98,10 +100,13 @@ class ProfileEquipment:
 
                         self.__equipment_set_effect.add(f"{set_name}\t{name}\t{lv}\t{effect}")
 
+                        print(f"set_name: {set_name}, name: {name}, lv: {lv}, effect: {effect}")
+
                     # print(item)
 
             except Exception:
                 continue
+
 
     def __parse_profile_avatar_slot__(self, bs_object: BeautifulSoup):
         profile_avatar_slot = bs_object.find("div", {"class": "profile-avatar__slot"})

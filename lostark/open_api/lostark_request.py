@@ -272,6 +272,14 @@ def get_gems(name="7레벨 홍염의 보석", character_class=""):
     return response.json()
 
 
+def get_character_info(character_name="데덴네귀여워"):
+    request_url = main_url + f"/armories/characters/{name}"
+
+    response = requests.get(request_url, headers=get_GET_headers(), verify=False)
+
+    return response.json()
+
+
 if __name__ == "__main__":
     # print(get_headers("D:/2022_Dedenne-Bot/json/info.json"))
 

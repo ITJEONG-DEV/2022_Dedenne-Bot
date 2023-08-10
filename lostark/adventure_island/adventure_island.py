@@ -57,7 +57,6 @@ def parse_adventure_island(authorization):
     item_list = get_adventure_island_info(authorization)
 
     for item in item_list:
-        print(item)
         # 기본 모험섬 정보를 체크한다
         if not check_adventure_island_available(name=item["ContentsName"]):
             # 기본 모험섬 정보 추가
